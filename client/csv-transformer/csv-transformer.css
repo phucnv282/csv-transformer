@@ -1,0 +1,91 @@
+.drop-box {
+    display: block;
+    background: #F8F8F8;
+    border: 5px solid #DDD;
+    border-radius: 10px;
+    width: 40%;
+    height: 100px;
+    text-align: center;
+    padding-top: 25px;
+    margin: 10px auto 0px;
+    font-size: 26px;
+}
+
+.dragover {
+    background-color: silver;
+}
+
+.start-convert-button, .download-button {
+    display: block;
+    min-width: 260px;
+    height: 55px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    margin: 0px auto 15px;
+    border-radius: 10px;
+}
+
+.preload-title {
+    display: table;
+    width: 70%;
+    padding: 5px 10px;
+    background-color: #fafafa;
+    border-bottom: solid #d9d9d9 1px;
+    margin: 0px auto 0px;
+    height: 41px;
+}
+
+.filename {
+    display: table-cell;
+    vertical-align: middle;
+    width: 67%;
+}
+
+.file-info {
+    text-align: center;
+    width: 100px;
+    display: table-cell;
+    vertical-align: middle;
+    padding-top: 5px;
+}
+
+.filesize {
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.action.download {
+    display: inline-block;
+    padding: 8px 10px 7px;
+    border-radius: 1px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #279d6a;
+    color: #fff;
+    text-align: center;
+    height: 30px;
+}
+
+.action.download:hover, .drop-box:hover, .close:hover {
+    cursor: pointer;
+}
+
+.close-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    width: 36px;
+}
+
+.close, .retry {
+    display: inline-block;
+    vertical-align: middle;
+    height: 25px;
+    border: none;
+    color: black;
+    background-position: center;
+    width: 26px;
+    background-repeat: no-repeat;
+}
