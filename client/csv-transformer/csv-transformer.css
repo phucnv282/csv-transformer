@@ -1,7 +1,7 @@
 .drop-box {
     display: block;
     background: #F8F8F8;
-    border: 1px solid #DDD;
+    border: 0px solid #DDD;
     border-radius: 10px;
     width: 40%;
     height: 100px;
