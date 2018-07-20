@@ -11,7 +11,7 @@ var storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
     }
-})
+});
 
 var upload = multer({ storage: storage });
 
@@ -21,19 +21,18 @@ router.get('/', function (req, res) {
 
 router.get('/download', function (req, res) {
     csvTransformer.downloadConvertedCSV(req, res).then(result => {
-        let fileName = req.query.fileName;
-        let fileToDownload = fileName.replace(fileName.slice(fileName.lastIndexOf('.')), '.output.csv');
-        res.download('uploads/' + fileToDownload, fileToDownload);
+        res.download(result);
     }, err => {
-
+        console.log(err);
     })
-})
+});
 
 router.post('/csv-transformer', upload.array('file'), function (req, res) {
     csvTransformer.csvTransform(req, res)
         .then(result => {
             res.send(result);
         }, err => {
+            console.log(err);
         })
 });
 

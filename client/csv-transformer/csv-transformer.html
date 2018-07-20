@@ -4,7 +4,7 @@
             <div ngf-drop ngf-select ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true">Drop/Click to upload</div>
         </div>
         <div>
-            <button ng-show="!self.availableToDownload" class="start-convert-button" ng-click="self.onConvertButtonClicked()" ng-disabled="self.files.length == 0">
+            <button ng-show="!self.availableToDownload" class="start-convert-button" ng-click="self.onConvertButtonClicked()" ng-hide="self.files.length == 0">
                 <span> Convert </span>
             </button>
         </div>

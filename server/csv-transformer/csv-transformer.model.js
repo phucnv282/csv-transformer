@@ -17,8 +17,10 @@ function csvTransform(req, res) {
             count++;
             if (count == 1000) {
                 fs.appendFileSync(outputUrl, buffer);
+                buffer = '';
+                count = 0;
             }
-        })
+        });
 
         rl.on('end', function () {
             if (buffer.length != 0) {
@@ -26,7 +28,7 @@ function csvTransform(req, res) {
             }
             fs.unlinkSync(inputUrl);
             console.log('===>WriteFileSuccessfully');
-        })
+        });
 
         resolve(req.files[0].filename);
     });
@@ -34,7 +36,13 @@ function csvTransform(req, res) {
 
 function downloadConvertedCSV(req, res) {
     return new Promise(function (resolve, reject) {
-        resolve('success');
+        let fileName = req.query.fileName;
+        let fileToDownload = fileName.replace(fileName.slice(fileName.lastIndexOf('.')), '.output.csv');
+        if (fs.existsSync('uploads/' + fileToDownload)) {
+            resolve('uploads/' + fileToDownload);
+        } else {
+            reject('===>SomethingWentWrong');
+        }
     })
 }
 

@@ -22,7 +22,7 @@ app.component('csvTransformer', {
                             file: self.files[i].file,
                         }
                     }).then(function (res) {
-                        console.log('Success');
+                        console.log('===>Success');
                         self.files[i].canDownload = true;
                         self.files[i].uploaded = true;
                         self.files[i].nameOnServer = res.data;

@@ -1,7 +1,7 @@
 .drop-box {
     display: block;
     background: #F8F8F8;
-    border: 5px solid #DDD;
+    border: 1px solid #DDD;
     border-radius: 10px;
     width: 40%;
     height: 100px;
@@ -15,7 +15,7 @@
     background-color: silver;
 }
 
-.start-convert-button, .download-button {
+.start-convert-button {
     display: block;
     min-width: 260px;
     height: 55px;
@@ -24,6 +24,21 @@
     font-size: 20px;
     margin: 0px auto 15px;
     border-radius: 10px;
+    background: #fe0000;
+    color: #fff;
+}
+
+.start-convert-button:disabled {
+    display: block;
+    min-width: 260px;
+    height: 55px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+    margin: 0px auto 15px;
+    border-radius: 10px;
+    background: #cccccc;
+    color: #666666;
 }
 
 .preload-title {

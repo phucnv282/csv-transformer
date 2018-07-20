@@ -8,8 +8,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'client')));
-
+app.use('/', express.static(path.join(__dirname, 'client')));
 app.use('/', require('./server/app.router'));
 
 app.listen('8000', function () {
