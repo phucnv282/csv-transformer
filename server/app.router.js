@@ -15,16 +15,13 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-router.get('/', function (req, res) {
-    res.sendFile('client/index.html');
-});
-
 router.get('/download', function (req, res) {
-    csvTransformer.downloadConvertedCSV(req, res).then(result => {
-        res.download(result);
-    }, err => {
-        console.log(err);
-    })
+    csvTransformer.downloadConvertedCSV(req, res)
+        .then(result => {
+            res.download(result);
+        }, err => {
+            console.log(err);
+        });
 });
 
 router.post('/csv-transformer', upload.array('file'), function (req, res) {
@@ -33,7 +30,7 @@ router.post('/csv-transformer', upload.array('file'), function (req, res) {
             res.send(result);
         }, err => {
             console.log(err);
-        })
+        });
 });
 
 module.exports = router;

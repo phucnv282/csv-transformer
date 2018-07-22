@@ -10,7 +10,7 @@ app.component('csvTransformer', {
 
         this.removeFileFromList = function (index) {
             self.files.splice(index, 1);
-        }
+        };
 
         this.onConvertButtonClicked = function () {
             for (let i = 0; i < self.files.length; i++) {
@@ -29,7 +29,7 @@ app.component('csvTransformer', {
                     });
                 }
             }
-        }
+        };
 
         this.formatFileSize = function (bytes, decimalPoint) {
             if (bytes == 0) return '0 Bytes';

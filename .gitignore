@@ -2,3 +2,4 @@ node_modules/
 uploads/
 bower_components
 /package-lock.json
+*.swp
