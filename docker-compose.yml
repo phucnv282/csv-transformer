@@ -2,7 +2,7 @@ version: "3"
 
 services:
     app:
-        image: nguyenkhacthanh/csv_transformer:latest
+        image: csv_transformer:latest
         deploy:
             replicas: 5
             resources:
@@ -12,7 +12,7 @@ services:
             restart_policy:
                 condition: on-failure
         ports:
-            - "8000:8000"
+            - "80:8000"
         networks:
             - webnet
 networks:
