@@ -11,6 +11,6 @@ app.use(express.static(path.join(__dirname)));
 app.use('/', express.static(path.join(__dirname, 'client')));
 app.use('/', require('./server/app.router'));
 
-app.listen('8000', function () {
+app.listen('8000', '0.0.0.0', function () {
     console.log("Listening on port 8000");
 });

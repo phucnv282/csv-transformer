@@ -2,7 +2,7 @@ var app = angular.module('app', ['ngFileUpload']);
 
 app.component('csvTransformer', {
     templateUrl: 'csv-transformer/csv-transformer.html',
-    controller: ['$scope', '$timeout', 'Upload', function ($scope, $timeout, Upload) {
+    controller: ['$scope', '$timeout', '$element', 'Upload', function ($scope, $timeout, $element, Upload) {
         var self = this;
         this.$onInit = function () {
             self.files = [];
@@ -20,6 +20,8 @@ app.component('csvTransformer', {
                         arrayKey: '',
                         data: {
                             file: self.files[i].file,
+                            numOfHeaderLines: self.files[i].numOfHeaderLines,
+                            format: self.files[i].format
                         }
                     }).then(function (res) {
                         console.log('===>Success');
@@ -30,6 +32,11 @@ app.component('csvTransformer', {
                 }
             }
         };
+
+        this.setFormat = function (file, format) {
+            $element.find(".dropdown a")[0].innerHTML = format + '<span class="caret"></span>';
+            self.files[self.files.indexOf(file)].format = format;
+        }
 
         this.formatFileSize = function (bytes, decimalPoint) {
             if (bytes == 0) return '0 Bytes';
@@ -48,7 +55,9 @@ app.component('csvTransformer', {
                         canDownload: false,
                         nameOnServer: '',
                         uploaded: false,
-                        size: self.formatFileSize(file.size, 3)
+                        size: self.formatFileSize(file.size, 1),
+                        numOfHeaderLines: null,
+                        format: '',
                     }
                     self.files.push(myfile);
                 });

@@ -16,7 +16,23 @@
                 <span class="glyphicon glyphicon-file"></span>
                 <span type="fn">{{fileObj.file.name}}</span>
             </div>
-            <div style="text-align: right;">
+            <div style="text-align: center;">
+                <div class="dropdown" ng-hide="fileObj.canDownload">
+                    <a data-toggle="dropdown" href="">Format
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" ng-click="self.setFormat(fileObj, 'W-R-V')">W-R-V</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" ng-click="self.setFormat(fileObj, 'D-R-V')">D-R-V</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" ng-click="self.setFormat(fileObj, 'W-D-R-V')">W-D-R-V</a>
+                        </li>
+                    </ul>
+                </div>
                 <div style="text-align: right;
                     margin-right: 10px;" ng-show="fileObj.canDownload">
                     <a class="action download" href="/download?fileName={{fileObj.nameOnServer}}" download>
@@ -24,6 +40,13 @@
                         Download
                     </a>
                 </div>
+                <form class="form-inline" ng-hide="fileObj.canDownload" style="margin-right: 10px">
+                    <div class="form-group">
+                        <!-- <label for="nohl" style="margin-bottom: 0px">Number of header lines:</label> -->
+                        <input class="form-control input-sm" placeholder="NumOfHeaderLines" ng-model="fileObj.numOfHeaderLines" style="width: 130px;height: 25px;"
+                            id="nohl">
+                    </div>
+                </form>
             </div>
 
             <div class="file-info">
