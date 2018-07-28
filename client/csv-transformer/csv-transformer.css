@@ -1,7 +1,7 @@
 .drop-box {
     display: block;
-    background: #F8F8F8;
-    border: 1px solid #DDD;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
     border-radius: 10px;
     width: 40%;
     height: 100px;
@@ -13,6 +13,10 @@
 
 .dragover {
     background-color: silver;
+}
+
+.form-group {
+    margin-right: 25px;
 }
 
 .start-convert-button {
@@ -51,10 +55,18 @@
     height: 41px;
 }
 
+.preload-title label {
+    margin-bottom: 0px;
+}
+
+.preload-title p {
+    margin-bottom: 0px;
+}
+
 .filename {
     display: table-cell;
     vertical-align: middle;
-    width: 67%;
+    width: 20%;
 }
 
 .file-info {
@@ -70,6 +82,10 @@
     font-size: 12px;
 }
 
+.download-button {
+    width: 610px;
+}
+
 .action.download {
     display: inline-block;
     padding: 8px 10px 7px;
@@ -83,18 +99,21 @@
     height: 30px;
 }
 
-.action.download:hover, .drop-box:hover, .close:hover {
+.action.download:hover,
+.drop-box:hover,
+a:hover {
     cursor: pointer;
 }
 
-.close-wrapper {
+.close-wrapper,
+.setting-wrapper {
     display: table-cell;
     vertical-align: middle;
     text-align: right;
-    width: 36px;
 }
 
-.close, .retry {
+.close,
+.setting-button {
     display: inline-block;
     vertical-align: middle;
     height: 25px;
@@ -103,4 +122,50 @@
     background-position: center;
     width: 26px;
     background-repeat: no-repeat;
+}
+
+.setting-button {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: 0.2;
+}
+
+.setting-button:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.setting-info {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    width: 110px;
+}
+
+.selected-line {
+    background-color: #444;
+    color: #fff;
+}
+
+.modal-body label.line {
+    display: block;
+    margin-bottom: 0px;
+}
+
+.modal-body label.line::before {
+    content: '\25ba';
+}
+
+.csv-transformer-border {
+    border: 1px solid black;
+    padding: 7px;
+    word-wrap: break-word;
+    min-width: 110px;
 }
