@@ -1,11 +1,19 @@
-FROM node:8.11.3
+FROM node:8.11.3-jessie
+
+RUN useradd -ms /bin/bash user0
 
 WORKDIR /app
 
 ADD . /app
 
-RUN npm install
+RUN chown -R user0:user0 /app
 
-EXPOSE 9000
+RUN npm install && npm install --global bower
 
-CMD ["node", "app.js"]
+USER user0
+
+RUN bower install
+
+EXPOSE 8000
+
+CMD ["npm", "start"]
