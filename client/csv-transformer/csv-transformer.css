@@ -71,7 +71,7 @@
 
 .file-info {
     text-align: center;
-    width: 100px;
+    min-width: 100px;
     display: table-cell;
     vertical-align: middle;
     padding-top: 5px;
@@ -83,7 +83,7 @@
 }
 
 .download-button {
-    width: 610px;
+    width: 600px;
 }
 
 .action.download {
