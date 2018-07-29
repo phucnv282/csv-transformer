@@ -1,4 +1,9 @@
 node_modules
 uploads
 bower_components
-/package-lock.json
+package-lock.json
+Dockerfile
+docker-compose.yml
+README.md
+.*
+

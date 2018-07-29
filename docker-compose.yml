@@ -13,7 +13,11 @@ services:
                 condition: on-failure
         ports:
             - "80:8000"
+        volumes:
+            - uploads: /app/uploads
         networks:
             - webnet
+volumes:
+    uploads:
 networks:
     webnet:
