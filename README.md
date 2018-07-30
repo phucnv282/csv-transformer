@@ -1,12 +1,15 @@
 * Not using Docker 
 
-// Install all packages in package.json \n
++ Install all packages in package.json
+
 npm i
 
-// Run app
+Run app
+
 npm start
 
 // Visit this URL to see app
+
 http://localhost:8000
 
 * Using Docker
