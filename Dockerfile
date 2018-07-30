@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM node:8.11.3-alpine as builder
 
 WORKDIR /app

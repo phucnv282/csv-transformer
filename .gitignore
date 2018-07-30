@@ -1,5 +1,8 @@
-node_modules/
-uploads/
+node_modules
+uploads
 bower_components
-/package-lock.json
-*.swp
+package-lock.json
+*.swp         
+*.un~
+.*
+!.dockerignore
