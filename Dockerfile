@@ -1,15 +1,19 @@
-FROM node:8.11.3-jessie
+FROM node:8.11.3-alpine as builder
 
 WORKDIR /app
 
 ADD . /app
 
-RUN mkdir /app/uploads
+RUN mkdir /app/uploads && npm install
 
-RUN npm install && npm install --global bower
+FROM alpine:latest
 
-RUN bower install --allow-root
+WORKDIR /app
 
+COPY --from=builder /usr/local/bin/node  /usr/bin
+COPY --from=builder /usr/lib/libgcc* /usr/lib/libstdc* /usr/lib/
+COPY --from=builder /app .
+ 
 EXPOSE 8000
 
-CMD ["npm", "start"]
+CMD ["node", "app.js"]

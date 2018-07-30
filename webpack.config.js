@@ -1,7 +1,9 @@
 var webpack = require('webpack');
 
 module.exports = {
-    entry: __dirname + '/entry.js',
+    entry: {
+        javascript: __dirname + '/entry.js',
+    },
     output: {
         path: __dirname + '/client',
         filename: 'bundle.js',
@@ -18,6 +20,21 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+                loader: 'url-loader?limit=100000',
             },
         ],
     },

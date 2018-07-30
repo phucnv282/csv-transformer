@@ -1,7 +1,7 @@
 var app = angular.module('app', ['ngFileUpload']);
 
 app.component('csvTransformer', {
-    templateUrl: 'csv-transformer/csv-transformer.html',
+    templateUrl: 'csv-transformer.html',
     controller: [
         '$scope',
         '$timeout',
@@ -24,7 +24,10 @@ app.component('csvTransformer', {
 
             this.onConvertButtonClicked = function() {
                 for (let i = 0; i < self.files.length; i++) {
-                    if (self.files[i].canDownload == false) {
+                    if (
+                        self.files[i].canDownload == false &&
+                        self.files[i].numOfHeaderLines >= 0
+                    ) {
                         let file = self.files[i];
                         let headerLine = file.viewContent[
                             file.numOfHeaderLines - 2
@@ -49,11 +52,10 @@ app.component('csvTransformer', {
                             url: '/csv-transformer',
                             arrayKey: '',
                             data: {
-                                file: self.files[i].file,
-                                numOfHeaderLines:
-                                    self.files[i].numOfHeaderLines,
-                                format: self.files[i].format,
-                                separator: self.files[i].separator,
+                                file: file.file,
+                                numOfHeaderLines: file.numOfHeaderLines,
+                                format: file.format,
+                                separator: file.separator,
                                 wellIndex: wellIndex,
                                 datasetIndex: datasetIndex,
                             },
@@ -62,7 +64,10 @@ app.component('csvTransformer', {
                             self.files[i].canDownload = true;
                             console.log(res.data);
                             self.files[i].fileOnServer = res.data;
+                            console.log(file);
                         });
+                    } else {
+                        console.log('===>Please choose header part');
                     }
                 }
             };
@@ -129,7 +134,7 @@ app.component('csvTransformer', {
                 }
             };
 
-            $scope.separatorChange = function(index) {
+            this.separatorChange = function(index) {
                 let viewContent = self.files[index].viewContent;
                 let lines = [];
                 for (let i = 0; i < viewContent.length; i++) {

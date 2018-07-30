@@ -29,7 +29,6 @@ router.get('/download', function(req, res) {
 router.post('/csv-transformer', upload.array('file'), function(req, res) {
     csvTransformer.csvTransform(req, res).then(
         result => {
-            console.log(result);
             res.send(result);
         },
         err => {
