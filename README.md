@@ -1,7 +1,19 @@
+* Not using Docker
+// Install all packages in package.json
 npm i
 
-bower install
-
+// Run app
 npm start
 
-http://localhost:8000
+// Visit this URL to see app
+http://localhost:8i000
+
+* Using Docker
+// Build image reference to Dockerfile
+docker build -t csv-transformer .
+
+// Run image on port 8000
+docker run -d --rm -p 8000:8000 csv-transformer
+
+// If you want to stop image
+docker stop csv-transformer
