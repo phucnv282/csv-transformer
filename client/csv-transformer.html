@@ -1,0 +1,155 @@
+<div>
+    <form>
+        <div class="form-group">
+            <div ngf-drop ngf-select ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true">Drop/Click to upload</div>
+        </div>
+        <div>
+            <button class="start-convert-button" ng-click="self.onConvertButtonClicked()" ng-hide="self.files.length == 0">
+                <span> Convert </span>
+            </button>
+        </div>
+    </form>
+
+    <div ng-repeat="fileObj in self.files track by $index">
+        <div type="file_row" class="preload-title">
+            <div class="setting-wrapper" ng-show="!fileObj.canDownload">
+                <div class="setting-button">
+                    <span class="glyphicon glyphicon-cog" style="margin-right: 100%;" data-toggle="modal" data-target="#{{self.id($index)}}"></span>
+                </div>
+            </div>
+            <div class="filename">
+                <span type="fn" style="margin-left: 7px;">{{fileObj.file.name}}</span>
+            </div>
+            <div class="setting-info" ng-hide="fileObj.canDownload">
+                <label>Separator:</label>
+                <p>{{fileObj.separator}}</p>
+            </div>
+            <div class="setting-info" ng-hide="fileObj.canDownload">
+                <label>Format:</label>
+                <p>{{fileObj.format}}</p>
+            </div>
+            <div class="setting-info" ng-hide="fileObj.canDownload">
+                <label>HeaderLines:</label>
+                <p>{{fileObj.numOfHeaderLines}}</p>
+            </div>
+            <div class="setting-info" ng-hide="fileObj.canDownload">
+                <label>WellColumn:</label>
+                <p>{{fileObj.wellCol}}</p>
+            </div>
+            <div class="setting-info" ng-hide="fileObj.canDownload">
+                <label>DepthColumn:</label>
+                <p>{{fileObj.datasetCol}}</p>
+            </div>
+            <div ng-hide="fileObj.canDownload">
+                <button type="button" class="btn btn-primary" style="margin-top: 3px;" ng-click="self.settingForAllFile($index)">ForAll</button>
+            </div>
+            <div style="text-align: center; margin-top: 7px;" ng-class="{'download-button': fileObj.canDownload}">
+                <div style="text-align: right; margin-right: 10px;" class="dropdown" name="format" id="format" style="display: inline-block;"
+                                                                                                               ng-show="fileObj.canDownload">
+                    <a data-toggle="dropdown" href="">Download
+                        <span class="caret"></span>
+                    </a>
+                    <ul style="padding-left: 7px; margin-left: 80%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="margin-left: 80%;">
+                        <div ng-repeat="name in fileObj.fileOnServer track by $index">
+                            <a role="menuitem" tabindex="-1" href="/download?fileName={{ name }}" download>{{ name.slice(name.indexOf('-') + 1) }}</a>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="file-info">
+                <span class="filesize">Size: {{fileObj.size}}
+                </span>
+            </div>
+            <div class="close-wrapper">
+                <div class="close" ng-click="self.removeFileFromList($index)">
+                    <span class="
+                    glyphicon glyphicon-remove-circle"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="{{self.id($index)}}" role="dialog">
+            <div class="modal-dialog" style="width: 90%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Setting</h4>
+                    </div>
+                    <div class="modal-body" style="padding: 5px; overflow: auto;">
+                        <div ng-show="fileObj.chooseHeaders">
+                            <label style="font-size: 14px; margin-bottom: 1px;margin-left: 10px;" for="contentLines">Please choose header part: </label>
+                            <div style='height: 450px; overflow: auto; position: relative;'>
+                                <ul name="contentLines" style="list-style: none;">
+                                    <li ng-repeat="x in fileObj.viewContent track by $index" style="font-size: 13px;">
+                                        <label class="line" ng-class="{'selected-line': fileObj.numOfHeaderLines > $index}">
+                                            <input type="radio" name="chooseHeaderLine" ng-model="fileObj.numOfHeaderLines" ng-value="$index + 1" style="margin-right: 0px; visibility: hidden;">{{ x.toString() }}</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div ng-show="!fileObj.chooseHeaders">
+                            <form class="form-inline" style="margin-left: 10px; margin-bottom: 10px;">
+                                <div class="form-group">
+                                    <label for="separator">Enter separator:</label>
+                                    <input type="text" class="form-control input-sm" id="separator" ng-model="fileObj.separator" ng-change="self.separatorChange($index)">
+                                </div>
+
+                                <div class="form-group" style="vertical-align: unset; min-width: 130px;">
+                                    <label for="format">Format:</label>
+                                    <div class="dropdown" name="format" id="format" style="display: inline-block;">
+                                        <a data-toggle="dropdown" href="">{{fileObj.format}}
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="presentation">
+                                                <a role="menuitem" tabindex="-1" ng-click="self.setFormat(fileObj, 'W-R-V')">W-R-V</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a role="menuitem" tabindex="-1" ng-click="self.setFormat(fileObj, 'D-R-V')">D-R-V</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a role="menuitem" tabindex="-1" ng-click="self.setFormat(fileObj, 'W-D-R-V')">W-D-R-V</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="wellCol">Enter well column:</label>
+                                    <input type="text" class="form-control input-sm" id="wellCol" ng-model="fileObj.wellCol">
+                                </div>
+                                <div class="form-group">
+                                    <label for="datasetCol">Enter dataset column:</label>
+                                    <input type="text" class="form-control input-sm" id="datasetCol" ng-model="fileObj.datasetCol">
+                                </div>
+                            </form>
+                            <div style="overflow:  auto; width: 100; height:  440px;">
+                                <table style="border-collapse: collapse;" class="csv-transformer-border">
+                                    <tr ng-if="$index == fileObj.numOfHeaderLines - 2" ng-repeat="x in fileObj.tableContent track by $index">
+                                        <th class="csv-transformer-border" ng-repeat="y in x track by $index">{{ y }}
+                                            <!-- <input style="font-size: 13px;" type="text" class="header" ng-value="{{y}}" ng-model="wiModal.titleOfFields[$index]" /> -->
+                                            <!-- <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-checked="checkAll" ng-model="wiModal.selectedFields[$index]"> -->
+                                        </th>
+                                    </tr>
+                                    <!-- <tr ng-repeat="x in fileObj.tableContent track by $index" ng-if="$index == fileObj.numOfHeaderLines - 1"> -->
+                                    <!--     <td class="csv-transformer-border" ng-repeat="y in x track by $index"> {{ y }} -->
+                                    <!-- <input style="font-size: 13px;" type="text" class="header" ng-value="y" ng-model="wiModal.units[$index]" /> -->
+                                    <!--     </td> -->
+                                    <!-- </tr> -->
+                                    <tr ng-if="$index > fileObj.numOfHeaderLines - 2" ng-repeat="x in fileObj.tableContent track by $index">
+                                        <td class="csv-transformer-border" ng-repeat="y in x track by $index">{{ y }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders">Next</button>
+                        <button type="button" class="btn btn-default" ng-click="fileObj.chooseHeaders = true" ng-show="!fileObj.chooseHeaders">Back</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-show="!fileObj.chooseHeaders" ng-click="fileObj.choosrHeaders = true">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
