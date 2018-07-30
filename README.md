@@ -1,7 +1,6 @@
 * Not using Docker 
 
-// Install all packages in package.json 
-
+// Install all packages in package.json \n
 npm i
 
 // Run app
