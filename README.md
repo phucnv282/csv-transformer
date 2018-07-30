@@ -1,12 +1,14 @@
-* Not using Docker
-// Install all packages in package.json
+* Not using Docker 
+
+// Install all packages in package.json 
+
 npm i
 
 // Run app
 npm start
 
 // Visit this URL to see app
-http://localhost:8i000
+http://localhost:8000
 
 * Using Docker
 // Build image reference to Dockerfile
