@@ -49,7 +49,7 @@ app.component('csvTransformer', {
                         }
 
                         Upload.upload({
-                            url: 'http://api.csv.dev.i2g.cloud/csv-transformer',
+                            url: '/csv/csv-transformer',
                             arrayKey: '',
                             data: {
                                 file: file.file,
