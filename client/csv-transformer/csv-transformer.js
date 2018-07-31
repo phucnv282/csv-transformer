@@ -1,7 +1,7 @@
 var app = angular.module('app', ['ngFileUpload']);
 
 app.component('csvTransformer', {
-    templateUrl: 'csv-transformer.html',
+    templateUrl: '/csv/csv-transformer.html',
     controller: [
         '$scope',
         '$timeout',
