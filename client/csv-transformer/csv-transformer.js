@@ -49,7 +49,7 @@ app.component('csvTransformer', {
                         }
 
                         Upload.upload({
-                            url: '/csv-transformer',
+                            url: '/csv/csv-transformer',
                             arrayKey: '',
                             data: {
                                 file: file.file,
@@ -72,22 +72,24 @@ app.component('csvTransformer', {
                 }
             };
 
-            this.nextToSetting = function(index) {
-                self.files[index].chooseHeaders = false;
-                let viewContent = self.files[index].viewContent;
-                let lines = [];
-                for (let i = 0; i < viewContent.length; i++) {
-                    let line = viewContent[i].split(
-                        self.files[index].separator,
-                    );
-                    let tarr = [];
-                    for (let j = 0; j < line.length; j++) {
-                        tarr.push(line[j]);
-                    }
-                    lines.push(tarr);
-                }
-                self.files[index].tableContent = lines;
-            };
+            // this.nextToSetting = function(index) {
+            //     self.files[index].chooseHeaders = false;
+            //     let viewContent = self.files[index].viewContent;
+            //     let lines = [];
+            //     for (let i = 0; i < viewContent.length; i++) {
+            //         let line = viewContent[i].split(
+            //             self.files[index].separator != ''
+            //                 ? self.files[index].separator
+            //                 : /\s|\t/g,
+            //         );
+            //         let tarr = [];
+            //         for (let j = 0; j < line.length; j++) {
+            //             tarr.push(line[j]);
+            //         }
+            //         lines.push(tarr);
+            //     }
+            //     self.files[index].tableContent = lines;
+            // };
 
             this.setFormat = function(file, format) {
                 // $element.find('.dropdown a')[4 * index].innerHTML =

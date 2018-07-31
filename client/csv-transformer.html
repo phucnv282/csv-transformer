@@ -51,7 +51,7 @@
                     </a>
                     <ul style="padding-left: 7px; margin-left: 80%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="margin-left: 80%;">
                         <div ng-repeat="name in fileObj.fileOnServer track by $index">
-                            <a role="menuitem" tabindex="-1" href="/download?fileName={{ name }}" download>{{ name.slice(name.indexOf('-') + 1) }}</a>
+                            <a role="menuitem" tabindex="-1" href="/csv/download?fileName={{ name }}" download>{{ name.slice(name.indexOf('-') + 1) }}</a>
                         </div>
                     </ul>
                 </div>
