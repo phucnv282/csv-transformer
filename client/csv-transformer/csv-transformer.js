@@ -78,7 +78,9 @@ app.component('csvTransformer', {
                 let lines = [];
                 for (let i = 0; i < viewContent.length; i++) {
                     let line = viewContent[i].split(
-                        self.files[index].separator,
+                        self.files[index].separator != ''
+                            ? self.files[index].separator
+                            : /\s|\t/g,
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {
