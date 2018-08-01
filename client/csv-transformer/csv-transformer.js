@@ -6,11 +6,14 @@ app.component('csvTransformer', {
         '$scope',
         '$timeout',
         '$element',
+        '$window',
+        '$http',
         'Upload',
-        function($scope, $timeout, $element, Upload) {
+        function($scope, $timeout, $element, $window, $http, Upload) {
             var self = this;
 
             this.$onInit = function() {
+                self.allFileOnServer = [];
                 self.files = [];
             };
 
@@ -34,10 +37,13 @@ app.component('csvTransformer', {
                         ].split(
                             file.separator != '' ? file.separator : /\s|\t/g,
                         );
-                        let wellIndex;
-                        let datasetIndex;
+                        let wellIndex = -1;
+                        let datasetIndex = -1;
                         for (let i = 0; i < headerLine.length; i++) {
-                            if (file.wellCol.toUpperCase() == headerLine[i]) {
+                            if (
+                                file.wellCol.toUpperCase() ==
+                                headerLine[i].toUpperCase()
+                            ) {
                                 wellIndex = i;
                             }
                             if (
@@ -59,14 +65,24 @@ app.component('csvTransformer', {
                                 wellIndex: wellIndex,
                                 datasetIndex: datasetIndex,
                             },
-                        }).then(function(res) {
-                            console.log('===>Success');
-                            self.files[i].canDownload = true;
-                            console.log(res.data);
-                            self.files[i].fileOnServer = res.data;
-                            console.log(file);
-                        });
-                    } else {
+                        }).then(
+                            function(res) {
+                                console.log('===>Success');
+                                console.log(res.data);
+                                res.data.forEach(function(file) {
+                                    self.allFileOnServer.push(file);
+                                });
+                                self.files[i].canDownload = true;
+                                self.files[i].fileOnServer = res.data;
+                            },
+                            function(res) {
+                                console.log('Error status: ' + res.status);
+                            },
+                        );
+                    } else if (
+                        !self.files[i].canDownload &&
+                        self.files[i].numOfHeaderLines < 0
+                    ) {
                         console.log('===>Please choose header part');
                     }
                 }
@@ -91,10 +107,15 @@ app.component('csvTransformer', {
                 self.files[index].tableContent = lines;
             };
 
-            this.setFormat = function(file, format) {
+            this.setFormat = function(index, format) {
                 // $element.find('.dropdown a')[4 * index].innerHTML =
                 //     format + '<span class="caret"></span>';
-                self.files[self.files.indexOf(file)].format = format;
+                self.files[index].format = format;
+                if (format == 'W-R-V') {
+                    self.files[index].chooseColumn = 'well';
+                } else if (format == 'D-R-V') {
+                    self.files[index].chooseColumn = 'dataset';
+                }
             };
 
             this.formatFileSize = function(bytes, decimalPoint) {
@@ -154,6 +175,26 @@ app.component('csvTransformer', {
                 self.files[index].tableContent = lines;
             };
 
+            this.wellColFocus = function(index) {
+                self.files[index].chooseColumn = 'well';
+            };
+
+            this.datasetColFocus = function(index) {
+                self.files[index].chooseColumn = 'dataset';
+            };
+
+            // window.addEventListener('beforeunload', function() {
+            //     if (self.allFileOnServer.length > 0) {
+            //         var request = new XMLHttpRequest();
+            //         request.open('POST', '/csv/exit', false);
+            //         request.setRequestHeader(
+            //             'content-type',
+            //             'application/x-www-form-urlencoded',
+            //         );
+            //         request.send('allFileOnServer=' + self.allFileOnServer);
+            //     }
+            // });
+
             $scope.$watch('files', function() {
                 if ($scope.files) {
                     $scope.files.forEach(file => {
@@ -170,6 +211,7 @@ app.component('csvTransformer', {
                             wellCol: 'well',
                             datasetCol: 'dataset',
                             chooseHeaders: true,
+                            chooseColumn: 'well',
                         };
 
                         var readFile = new FileReader();

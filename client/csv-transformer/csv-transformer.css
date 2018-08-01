@@ -101,7 +101,8 @@
 
 .action.download:hover,
 .drop-box:hover,
-a:hover {
+a:hover,
+.column:hover {
     cursor: pointer;
 }
 
@@ -168,4 +169,9 @@ a:hover {
     padding: 7px;
     word-wrap: break-word;
     min-width: 110px;
+}
+
+.column-selected {
+    background-color: black;
+    color: white;
 }

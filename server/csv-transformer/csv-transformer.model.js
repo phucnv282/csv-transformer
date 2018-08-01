@@ -123,7 +123,24 @@ function downloadConvertedCSV(req, res) {
     });
 }
 
+// function onExit(req, res) {
+//     return new Promise(function(resolve, reject) {
+//         try {
+//             let fileArr = req.body.allFileOnServer.split(',');
+//             fileArr.forEach(function(file) {
+//                 if (fs.existsSync('uploads/' + file)) {
+//                     fs.unlinkSync('uploads/' + file);
+//                 }
+//             });
+//             resolve('===>Clean all files completely');
+//         } catch (err) {
+//             reject(err);
+//         }
+//     });
+// }
+
 module.exports = {
     csvTransform: csvTransform,
     downloadConvertedCSV: downloadConvertedCSV,
+    // onExit: onExit,
 };
