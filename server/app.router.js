@@ -41,6 +41,7 @@ router.post('/csv-transformer', upload.array('file'), function(req, res) {
 //     csvTransformer.onExit(req, res).then(
 //         result => {
 //             res.send(result);
+//             console.log(result);
 //         },
 //         err => {
 //             console.log(err);

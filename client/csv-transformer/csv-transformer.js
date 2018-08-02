@@ -29,7 +29,7 @@ app.component('csvTransformer', {
                 for (let i = 0; i < self.files.length; i++) {
                     if (
                         self.files[i].canDownload == false &&
-                        self.files[i].numOfHeaderLines >= 0
+                        self.files[i].numOfHeaderLines > 0
                     ) {
                         let file = self.files[i];
                         let headerLine = file.viewContent[
@@ -79,11 +79,6 @@ app.component('csvTransformer', {
                                 console.log('Error status: ' + res.status);
                             },
                         );
-                    } else if (
-                        !self.files[i].canDownload &&
-                        self.files[i].numOfHeaderLines < 0
-                    ) {
-                        console.log('===>Please choose header part');
                     }
                 }
             };
@@ -175,15 +170,48 @@ app.component('csvTransformer', {
                 self.files[index].tableContent = lines;
             };
 
+            this.checkSelectDuplicate = function(file) {
+                let index = self.files.indexOf(file);
+                if (self.files[index].wellCol == self.files[index].datasetCol) {
+                    self.files[index].checkDuplicate = true;
+                } else {
+                    self.files[index].checkDuplicate = false;
+                }
+                self.files[index].checkFullField = true;
+            };
+
             this.wellColFocus = function(index) {
                 self.files[index].chooseColumn = 'well';
+                self.files[index].checkFullField = true;
             };
 
             this.datasetColFocus = function(index) {
                 self.files[index].chooseColumn = 'dataset';
+                self.files[index].checkFullField = true;
             };
 
-            // window.addEventListener('beforeunload', function() {
+            this.submitSetting = function(index) {
+                let file = self.files[index];
+                if (
+                    (file.format == 'W-D-R-V' &&
+                        (file.wellCol == '' || file.datasetCol == '')) ||
+                    (file.format == 'W-R-V' && file.wellCol == '') ||
+                    (file.format == 'D-R-V' && file.datasetCol == '')
+                ) {
+                    self.files[index].checkFullField = false;
+                }
+                if (file.checkFullField) {
+                    if (file.format == 'W-D-R-V') {
+                        if (!file.checkDuplicate) {
+                            $('#' + self.id(index)).modal('hide');
+                        }
+                    } else {
+                        $('#' + self.id(index)).modal('hide');
+                    }
+                }
+            };
+
+            // window.addEventListener('unload', function() {
             //     if (self.allFileOnServer.length > 0) {
             //         var request = new XMLHttpRequest();
             //         request.open('POST', '/csv/exit', false);
@@ -207,11 +235,13 @@ app.component('csvTransformer', {
                             size: self.formatFileSize(file.size, 1),
                             numOfHeaderLines: -1,
                             format: 'W-D-R-V',
-                            separator: ',',
-                            wellCol: 'well',
-                            datasetCol: 'dataset',
+                            separator: '',
+                            wellCol: '',
+                            datasetCol: '',
                             chooseHeaders: true,
                             chooseColumn: 'well',
+                            checkDuplicate: false,
+                            checkFullField: true,
                         };
 
                         var readFile = new FileReader();

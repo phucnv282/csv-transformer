@@ -70,10 +70,11 @@
 }
 
 .file-info {
-    text-align: center;
+    text-align: right;
     min-width: 100px;
     display: table-cell;
     vertical-align: middle;
+    padding-right: 10px;
     padding-top: 5px;
 }
 
@@ -107,14 +108,18 @@ a:hover,
 }
 
 .close-wrapper,
-.setting-wrapper {
+.setting-wrapper,
+.file-icon,
+.forall-wrapper {
     display: table-cell;
     vertical-align: middle;
-    text-align: right;
+    text-align: left;
+    width: 10px;
 }
 
 .close,
-.setting-button {
+.setting-button,
+.forall-button {
     display: inline-block;
     vertical-align: middle;
     height: 25px;
@@ -125,7 +130,8 @@ a:hover,
     background-repeat: no-repeat;
 }
 
-.setting-button {
+.setting-button,
+.forall-button {
     float: right;
     font-size: 21px;
     font-weight: bold;
@@ -136,7 +142,8 @@ a:hover,
     opacity: 0.2;
 }
 
-.setting-button:hover {
+.setting-button:hover,
+.forall-button:hover {
     color: #000;
     text-decoration: none;
     cursor: pointer;
@@ -171,7 +178,12 @@ a:hover,
     min-width: 110px;
 }
 
-.column-selected {
-    background-color: black;
+.well-selected {
+    background-color: red;
+    color: white;
+}
+
+.dataset-selected {
+    background-color: blue;
     color: white;
 }
