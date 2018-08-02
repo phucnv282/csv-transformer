@@ -18,32 +18,32 @@
             <div class="filename">
                 <span type="fn" style="margin-left: 7px;">{{fileObj.file.name}}</span>
             </div>
-            <div class="setting-info" ng-hide="fileObj.canDownload">
-                <label>Separator:</label>
-                <p>{{fileObj.separator}}</p>
-            </div>
-            <div class="setting-info" ng-hide="fileObj.canDownload">
-                <label>Format:</label>
-                <p>{{fileObj.format}}</p>
-            </div>
-            <div class="setting-info" ng-hide="fileObj.canDownload">
-                <label>HeaderLines:</label>
-                <p>{{fileObj.numOfHeaderLines}}</p>
-            </div>
-            <div class="setting-info" ng-hide="fileObj.canDownload" ng-show="fileObj.format == 'W-D-R-V' || fileObj.format == 'W-R-V'">
-                <label>WellColumn:</label>
-                <p>{{fileObj.wellCol}}</p>
-            </div>
-            <div class="setting-info" ng-hide="fileObj.canDownload" ng-show="fileObj.format == 'W-D-R-V' || fileObj.format == 'D-R-V'">
-                <label>DatasetColumn:</label>
-                <p>{{fileObj.datasetCol}}</p>
-            </div>
-            <!-- <div ng-hide="fileObj.canDownload"> -->
+            <div ng-hide="fileObj.canDownload != 'false'">
+                <div class="setting-info">
+                    <label>Separator:</label>
+                    <p>{{fileObj.separator}}</p>
+                </div>
+                <div class="setting-info">
+                    <label>Format:</label>
+                    <p>{{fileObj.format}}</p>
+                </div>
+                <div class="setting-info">
+                    <label>HeaderLines:</label>
+                    <p>{{fileObj.numOfHeaderLines}}</p>
+                </div>
+                <div class="setting-info" ng-show="fileObj.format == 'W-D-R-V' || fileObj.format == 'W-R-V'">
+                    <label>WellColumn:</label>
+                    <p>{{fileObj.wellCol}}</p>
+                </div>
+                <div class="setting-info" ng-show="fileObj.format == 'W-D-R-V' || fileObj.format == 'D-R-V'">
+                    <label>DatasetColumn:</label>
+                    <p>{{fileObj.datasetCol}}</p>
+                </div>
+            </div>            <!-- <div ng-hide="fileObj.canDownload"> -->
             <!--     <button type="button" class="btn btn-primary" style="margin-top: 3px;" ng-click="self.settingForAllFile($index)">ForAll</button> -->
             <!-- </div> -->
-            <div style="text-align: center; margin-top: 7px;" ng-class="{'download-button': fileObj.canDownload}">
-                <div style="text-align: right; margin-right: 10px;" class="dropdown" name="format" id="format" style="display: inline-block;"
-                                                                                                               ng-show="fileObj.canDownload">
+            <div style="text-align: center; margin-top: 7px;" ng-class="{'download-button': fileObj.canDownload == 'true'}">
+                <div style="text-align: right; margin-right: 10px;" class="dropdown" name="format" id="format" style="display: inline-block;" ng-show="fileObj.canDownload == 'true'">
                     <a data-toggle="dropdown" href="">Download
                         <span class="caret"></span>
                     </a>
@@ -55,15 +55,16 @@
                 </div>
             </div>
             <div class="file-info">
-                <span class="filesize">Size: {{fileObj.size}}
+                <span class="filesize"><img id="spinner" ng-src="/csv/spinner.gif" ng-show="fileObj.canDownload == 'pending'">
+                    Size: {{fileObj.size}}
                 </span>
             </div>
-            <div class="setting-wrapper" ng-show="!fileObj.canDownload">
+            <div class="setting-wrapper" ng-show="fileObj.canDownload == 'false'">
                 <div class="setting-button">
                     <span class="glyphicon glyphicon-cog" style="margin-right: 100%;" data-toggle="modal" data-target="#{{self.id($index)}}"></span>
                 </div>
             </div>
-            <div class="forall-wrapper" ng-show="!fileObj.canDownload">
+            <div class="forall-wrapper" ng-show="fileObj.canDownload == 'false'">
                 <div class="forall-button" ng-click="self.settingForAllFile($index)">
                     <span class="glyphicon glyphicon-circle-arrow-down" style="margin-right: 100%;"></span>
                 </div>

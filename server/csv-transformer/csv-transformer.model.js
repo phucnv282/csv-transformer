@@ -1,5 +1,5 @@
 const fs = require('fs');
-const readline = require('line-by-line');
+const rl = require('readline');
 
 function csvTransform(req, res) {
     return new Promise(function(resolve, reject) {
@@ -9,26 +9,28 @@ function csvTransform(req, res) {
             let inputUrl = req.files[0].path;
             let inputName = req.files[0].filename;
             let outputUrl = '';
-            // let outputUrl = inputUrl.replace(inputUrl.slice(inputUrl.lastIndexOf('.') + 1), 'output.csv');
-            // fs.writeFileSync(outputUrl, '');
-            let rl = new readline(inputUrl);
             let buffer = '';
             let header = '';
             let numOfHeaderLines = parseInt(req.body.numOfHeaderLines);
             let format = req.body.format;
             let wellIndex = parseInt(req.body.wellIndex);
             let datasetIndex = parseInt(req.body.datasetIndex);
+            let separator = req.body.separator;
             let count = 0;
             let bufferCount = 0;
             let currentWell = '';
             let outputFiles = [];
 
-            rl.on('line', function(line) {
+            let readLine = rl.createInterface({
+                input: fs.createReadStream(inputUrl),
+            });
+
+            readLine.on('line', function(line) {
                 line = line.trim();
-                //            line = line.replace(/\t|\s/g, ',');
                 let arrayOfLine = line.split(
-                    req.body.separator != '' ? req.body.separator : /\t|\s/g,
+                    req.body.separator != '' ? req.body.separator : /[ \t]/,
                 );
+
                 let lineWellName = '';
                 if (count >= numOfHeaderLines - 2) {
                     if (format == 'W-R-V' || format == 'D-R-V') {
@@ -60,6 +62,7 @@ function csvTransform(req, res) {
                         currentWell +
                         '.csv';
                     outputUrl = 'uploads/' + fileName;
+                    console.log(outputUrl);
                     fs.writeFileSync(outputUrl, header + line + '\n');
                     outputFiles.push(fileName);
                 } else {
@@ -67,7 +70,6 @@ function csvTransform(req, res) {
                         buffer += line + '\n';
                         bufferCount++;
                         if (bufferCount == 1000) {
-                            // console.log(outputUrl);
                             fs.appendFileSync(outputUrl, buffer);
                             buffer = '';
                             bufferCount = 0;
@@ -93,7 +95,7 @@ function csvTransform(req, res) {
                 count++;
             });
 
-            rl.on('end', function() {
+            readLine.on('close', function() {
                 if (buffer.length != 0) {
                     fs.appendFileSync(outputUrl, buffer);
                 }
@@ -111,10 +113,6 @@ function csvTransform(req, res) {
 function downloadConvertedCSV(req, res) {
     return new Promise(function(resolve, reject) {
         let fileName = req.query.fileName;
-        // let fileToDownload = fileName.replace(
-        //     fileName.slice(fileName.lastIndexOf('.')),
-        //     '.output.csv',
-        // );
         if (fs.existsSync('uploads/' + fileName)) {
             resolve('uploads/' + fileName);
         } else {

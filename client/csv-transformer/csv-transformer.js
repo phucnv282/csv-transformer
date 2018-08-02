@@ -28,14 +28,14 @@ app.component('csvTransformer', {
             this.onConvertButtonClicked = function() {
                 for (let i = 0; i < self.files.length; i++) {
                     if (
-                        self.files[i].canDownload == false &&
+                        self.files[i].canDownload == 'false' &&
                         self.files[i].numOfHeaderLines > 0
                     ) {
                         let file = self.files[i];
                         let headerLine = file.viewContent[
                             file.numOfHeaderLines - 2
                         ].split(
-                            file.separator != '' ? file.separator : /\s|\t/g,
+                            file.separator != '' ? file.separator : /[ \t]/,
                         );
                         let wellIndex = -1;
                         let datasetIndex = -1;
@@ -53,6 +53,8 @@ app.component('csvTransformer', {
                                 datasetIndex = i;
                             }
                         }
+
+                        self.files[i].canDownload = 'pending';
 
                         Upload.upload({
                             url: '/csv/csv-transformer',
@@ -72,7 +74,7 @@ app.component('csvTransformer', {
                                 res.data.forEach(function(file) {
                                     self.allFileOnServer.push(file);
                                 });
-                                self.files[i].canDownload = true;
+                                self.files[i].canDownload = 'true';
                                 self.files[i].fileOnServer = res.data;
                             },
                             function(res) {
@@ -91,7 +93,7 @@ app.component('csvTransformer', {
                     let line = viewContent[i].split(
                         self.files[index].separator != ''
                             ? self.files[index].separator
-                            : /\s|\t/g,
+                            : /[ \t]/,
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {
@@ -139,7 +141,7 @@ app.component('csvTransformer', {
             this.settingForAllFile = function(index) {
                 let thisFile = self.files[index];
                 for (let i = 0; i < self.files.length; i++) {
-                    if (i != index && !self.files[i].canDownload) {
+                    if (i != index && self.files[i].canDownload == 'false') {
                         // $scope.$apply(function() {
                         self.files[i].numOfHeaderLines =
                             thisFile.numOfHeaderLines;
@@ -159,7 +161,7 @@ app.component('csvTransformer', {
                     let line = viewContent[i].split(
                         self.files[index].separator != ''
                             ? self.files[index].separator
-                            : /\t|\s/g,
+                            : /[ \s]/,
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {
@@ -230,7 +232,7 @@ app.component('csvTransformer', {
                             file: file,
                             viewContent: [],
                             tableContent: [],
-                            canDownload: false,
+                            canDownload: 'false',
                             fileOnServer: [],
                             size: self.formatFileSize(file.size, 1),
                             numOfHeaderLines: -1,
