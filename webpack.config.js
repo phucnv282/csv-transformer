@@ -5,8 +5,8 @@ module.exports = {
         javascript: __dirname + '/entry.js',
     },
     output: {
-        path: __dirname + '/client',
-        filename: 'bundle.js',
+        path: __dirname + '/public',
+        filename: 'csv-transformer.bundle.js',
         library: 'csvTransformer',
     },
     plugins: [
@@ -23,14 +23,7 @@ module.exports = {
             },
             {
                 test: /\.html$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                        },
-                    },
-                ],
+                use: 'html-loader',
             },
             {
                 test: /\.(png|woff|woff2|eot|ttf|svg)$/,

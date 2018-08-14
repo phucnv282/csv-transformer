@@ -7,8 +7,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(express.static(path.join(__dirname)));
-app.use('/csv', express.static(path.join(__dirname, 'client')));
+app.use('/csv', express.static(path.join(__dirname)));
 app.use('/csv', require('./server/app.router'));
 app.use('/ip', (req, res) => {
     res.send(req.connection.remoteAddress);

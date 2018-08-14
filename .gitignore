@@ -1,6 +1,7 @@
 node_modules
 uploads
 bower_components
+client/csv-transformer
 package-lock.json
 *.swp         
 *.un~
