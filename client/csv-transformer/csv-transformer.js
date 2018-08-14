@@ -33,9 +33,9 @@ app.component('csvTransformer', {
                     ) {
                         let file = self.files[i];
                         let headerLine = file.viewContent[
-                            file.numOfHeaderLines - 2
+                            file.headerLineIndex - 1
                         ].split(
-                            file.separator != '' ? file.separator : /[ \t]/,
+                            file.separator != '' ? file.separator : /[ \t\,\;]/,
                         );
                         let wellIndex = -1;
                         let datasetIndex = -1;
@@ -62,6 +62,8 @@ app.component('csvTransformer', {
                             data: {
                                 file: file.file,
                                 numOfHeaderLines: file.numOfHeaderLines,
+                                headerLineIndex: file.headerLineIndex - 1,
+                                dataLineIndex: file.dataLineIndex - 1,
                                 format: file.format,
                                 separator: file.separator,
                                 wellIndex: wellIndex,
@@ -85,6 +87,22 @@ app.component('csvTransformer', {
                 }
             };
 
+            this.changeSettingOption = function(lineName, index) {
+                let thisFile = self.files[index];
+                thisFile.choosingLine = lineName;
+            };
+
+            this.chooseLineIndex = function(file, indexLine) {
+                let indexFile = self.files.indexOf(file);
+                let thisFile = self.files[indexFile];
+                if (thisFile.choosingLine == 'header') {
+                    thisFile.headerLineIndex = indexLine;
+                } else {
+                    thisFile.dataLineIndex = indexLine;
+                    thisFile.numOfHeaderLines = indexLine - 1;
+                }
+            };
+
             this.nextToSetting = function(index) {
                 self.files[index].chooseHeaders = false;
                 let viewContent = self.files[index].viewContent;
@@ -93,7 +111,7 @@ app.component('csvTransformer', {
                     let line = viewContent[i].split(
                         self.files[index].separator != ''
                             ? self.files[index].separator
-                            : /[ \t]/,
+                            : /[ \t\,\;]/,
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {
@@ -104,16 +122,38 @@ app.component('csvTransformer', {
                 self.files[index].tableContent = lines;
             };
 
-            this.setFormat = function(index, format) {
-                // $element.find('.dropdown a')[4 * index].innerHTML =
-                //     format + '<span class="caret"></span>';
-                self.files[index].format = format;
-                if (format == 'W-R-V') {
-                    self.files[index].chooseColumn = 'well';
-                } else if (format == 'D-R-V') {
-                    self.files[index].chooseColumn = 'dataset';
+            this.changeLinesToShow = function(index) {
+                let thisFile = self.files[index];
+                if (thisFile.viewContent.length > thisFile.linesToShow) {
+                    thisFile.viewContent.splice(
+                        thisFile.linesToShow,
+                        thisFile.viewContent.length - thisFile.linesToShow,
+                    );
+                } else if (thisFile.viewContent.length < thisFile.linesToShow) {
+                    for (
+                        let i = thisFile.viewContent.length;
+                        i < thisFile.linesToShow;
+                        i++
+                    ) {
+                        if (i == thisFile.allContent.length) {
+                            break;
+                        } else {
+                            thisFile.viewContent.push(thisFile.allContent[i]);
+                        }
+                    }
                 }
             };
+
+            // this.setFormat = function(index, format) {
+            //     // $element.find('.dropdown a')[4 * index].innerHTML =
+            //     //     format + '<span class="caret"></span>';
+            //     self.files[index].format = format;
+            //     if (format == 'W-R-V') {
+            //         self.files[index].chooseColumn = 'well';
+            //     } else if (format == 'D-R-V') {
+            //         self.files[index].chooseColumn = 'dataset';
+            //     }
+            // };
 
             this.formatFileSize = function(bytes, decimalPoint) {
                 if (bytes == 0) return '0 Bytes';
@@ -145,6 +185,9 @@ app.component('csvTransformer', {
                         // $scope.$apply(function() {
                         self.files[i].numOfHeaderLines =
                             thisFile.numOfHeaderLines;
+                        self.files[i].headerLineIndex =
+                            thisFile.headerLineIndex;
+                        self.files[i].dataLineIndex = thisFile.dataLineIndex;
                         self.files[i].format = thisFile.format;
                         self.files[i].separator = thisFile.separator;
                         self.files[i].wellCol = thisFile.wellCol;
@@ -161,7 +204,7 @@ app.component('csvTransformer', {
                     let line = viewContent[i].split(
                         self.files[index].separator != ''
                             ? self.files[index].separator
-                            : /[ \s]/,
+                            : /[ \t\,\;]/,
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {
@@ -172,44 +215,97 @@ app.component('csvTransformer', {
                 self.files[index].tableContent = lines;
             };
 
-            this.checkSelectDuplicate = function(file) {
-                let index = self.files.indexOf(file);
-                if (self.files[index].wellCol == self.files[index].datasetCol) {
-                    self.files[index].checkDuplicate = true;
-                } else {
-                    self.files[index].checkDuplicate = false;
+            this.changeCol = function(file) {
+                let indexFile = self.files.indexOf(file);
+                let thisFile = self.files[indexFile];
+                for (
+                    let i = 0;
+                    i <
+                    thisFile.tableContent[thisFile.headerLineIndex - 1].length;
+                    i++
+                ) {
+                    if (thisFile.chooseColumn == 'well') {
+                        if (
+                            thisFile.tableContent[thisFile.headerLineIndex - 1][
+                                i
+                            ].toUpperCase() == thisFile.wellCol.toUpperCase()
+                        ) {
+                            thisFile.wellColIndex = i;
+                            if (
+                                thisFile.wellColIndex ==
+                                thisFile.datasetColIndex
+                            ) {
+                                thisFile.datasetColIndex = -1;
+                                thisFile.datasetCol = '';
+                            }
+                            break;
+                        }
+                    } else {
+                        if (
+                            thisFile.tableContent[thisFile.headerLineIndex - 1][
+                                i
+                            ].toUpperCase() == thisFile.datasetCol.toUpperCase()
+                        ) {
+                            thisFile.datasetColIndex = i;
+                            if (
+                                thisFile.wellColIndex ==
+                                thisFile.datasetColIndex
+                            ) {
+                                thisFile.wellColIndex = -1;
+                                thisFile.wellCol = '';
+                            }
+                            break;
+                        }
+                    }
                 }
-                self.files[index].checkFullField = true;
+            };
+
+            this.settingColumnIndex = function(file, indexCol) {
+                let indexFile = self.files.indexOf(file);
+                let thisFile = self.files[indexFile];
+                if (self.files[indexFile].chooseColumn == 'well') {
+                    self.files[indexFile].wellColIndex = indexCol;
+                    self.files[indexFile].wellCol =
+                        thisFile.tableContent[thisFile.headerLineIndex - 1][
+                            indexCol
+                        ];
+                } else {
+                    self.files[indexFile].datasetColIndex = indexCol;
+                    self.files[indexFile].datasetCol =
+                        thisFile.tableContent[thisFile.headerLineIndex - 1][
+                            indexCol
+                        ];
+                }
+                if (
+                    self.files[indexFile].wellCol ==
+                    self.files[indexFile].datasetCol
+                ) {
+                    if (self.files[indexFile].chooseColumn == 'well') {
+                        self.files[indexFile].datasetCol = '';
+                        self.files[indexFile].datasetColIndex = -1;
+                    } else {
+                        self.files[indexFile].wellCol = '';
+                        self.files[indexFile].wellColIndex = -1;
+                    }
+                }
             };
 
             this.wellColFocus = function(index) {
                 self.files[index].chooseColumn = 'well';
-                self.files[index].checkFullField = true;
             };
 
             this.datasetColFocus = function(index) {
                 self.files[index].chooseColumn = 'dataset';
-                self.files[index].checkFullField = true;
             };
 
             this.submitSetting = function(index) {
                 let file = self.files[index];
-                if (
-                    (file.format == 'W-D-R-V' &&
-                        (file.wellCol == '' || file.datasetCol == '')) ||
-                    (file.format == 'W-R-V' && file.wellCol == '') ||
-                    (file.format == 'D-R-V' && file.datasetCol == '')
-                ) {
-                    self.files[index].checkFullField = false;
-                }
-                if (file.checkFullField) {
-                    if (file.format == 'W-D-R-V') {
-                        if (!file.checkDuplicate) {
-                            $('#' + self.id(index)).modal('hide');
-                        }
-                    } else {
-                        $('#' + self.id(index)).modal('hide');
-                    }
+                if (file.wellColIndex >= 0 && file.datasetColIndex >= 0) {
+                    self.files[index].format = 'W-D-R-V';
+                } else if (file.wellColIndex >= 0 && file.datasetColIndex < 0) {
+                    self.files[index].format = 'W-R-V';
+                } else if (file.wellColIndex < 0 && file.datasetColIndex >= 0) {
+                    self.files[index].format = 'D-R-V';
                 }
             };
 
@@ -230,20 +326,25 @@ app.component('csvTransformer', {
                     $scope.files.forEach(file => {
                         let myFile = {
                             file: file,
+                            allContent: [],
                             viewContent: [],
                             tableContent: [],
+                            linesToShow: 100,
                             canDownload: 'false',
                             fileOnServer: [],
                             size: self.formatFileSize(file.size, 1),
                             numOfHeaderLines: -1,
+                            headerLineIndex: -1,
+                            dataLineIndex: -1,
+                            choosingLine: 'header',
                             format: 'W-D-R-V',
                             separator: '',
                             wellCol: '',
+                            wellColIndex: -1,
                             datasetCol: '',
+                            datasetColIndex: -1,
                             chooseHeaders: true,
                             chooseColumn: 'well',
-                            checkDuplicate: false,
-                            checkFullField: true,
                         };
 
                         var readFile = new FileReader();
@@ -253,13 +354,12 @@ app.component('csvTransformer', {
                             var line = [];
 
                             var allTextLines = contents.split(/\r\n|\n/);
-                            for (
-                                var i = 0;
-                                i < allTextLines.length && i < 30;
-                                i++
-                            ) {
+                            for (var i = 0; i < allTextLines.length; i++) {
                                 allTextLines[i] = allTextLines[i].trim();
-                                myFile.viewContent.push(allTextLines[i]);
+                                myFile.allContent.push(allTextLines[i]);
+                                if (i < myFile.linesToShow) {
+                                    myFile.viewContent.push(allTextLines[i]);
+                                }
                             }
                         };
                         readFile.onloadend = function() {

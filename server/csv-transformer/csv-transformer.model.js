@@ -28,7 +28,7 @@ function csvTransform(req, res) {
             readLine.on('line', function(line) {
                 line = line.trim();
                 let arrayOfLine = line.split(
-                    req.body.separator != '' ? req.body.separator : /[ \t]/,
+                    req.body.separator != '' ? req.body.separator : /[ \t\,\;]/,
                 );
 
                 let lineWellName = '';
@@ -62,7 +62,7 @@ function csvTransform(req, res) {
                         currentWell +
                         '.csv';
                     outputUrl = 'uploads/' + fileName;
-                    console.log(outputUrl);
+                    // console.log(outputUrl);
                     fs.writeFileSync(outputUrl, header + line + '\n');
                     outputFiles.push(fileName);
                 } else {

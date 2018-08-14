@@ -47,7 +47,7 @@
 
 .preload-title {
     display: table;
-    width: 70%;
+    width: 95%;
     padding: 5px 10px;
     background-color: #fafafa;
     border-bottom: solid #d9d9d9 1px;
@@ -71,7 +71,6 @@
 
 .file-info {
     text-align: right;
-    min-width: 100px;
     display: table-cell;
     vertical-align: middle;
     padding-right: 10px;
@@ -84,7 +83,7 @@
 }
 
 .download-button {
-    width: 185%;
+    width: 170%;
 }
 
 .action.download {
@@ -153,22 +152,32 @@ a:hover,
 .setting-info {
     text-align: center;
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: top;
     width: 110px;
 }
 
-.selected-line {
-    background-color: #444;
-    color: #fff;
+.header-line {
+    background-color: #94c9f3;
+    color: #333;
+}
+
+.data-line {
+    background-color: #f99600;
+    color: #333;
 }
 
 .modal-body label.line {
     display: block;
     margin-bottom: 0px;
+    white-space: nowrap;
+    font-weight: normal;
 }
 
-.modal-body label.line::before {
-    content: '\25ba';
+.index-line {
+    width: 3%;
+    text-align: center;
+    background-color: silver;
+    margin: 0px;
 }
 
 .csv-transformer-border {

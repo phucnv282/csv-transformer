@@ -18,7 +18,7 @@
             <div class="filename">
                 <span type="fn" style="margin-left: 7px;">{{fileObj.file.name}}</span>
             </div>
-            <div ng-hide="fileObj.canDownload != 'false'">
+            <div ng-hide="fileObj.canDownload != 'false'" style="float: right;">
                 <div class="setting-info">
                     <label>Separator:</label>
                     <p>{{fileObj.separator}}</p>
@@ -78,7 +78,7 @@
         </div>
 
         <div class="modal fade" data-backdrop="static" data-keyboard="false" id="{{self.id($index)}}" role="dialog">
-            <div class="modal-dialog" style="width: 90%;">
+            <div class="modal-dialog" style="width: 60%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -86,12 +86,28 @@
                     </div>
                     <div class="modal-body" style="padding: 5px; overflow: auto;">
                         <div ng-show="fileObj.chooseHeaders">
-                            <label style="font-size: 14px; margin-bottom: 1px;margin-left: 10px;" for="contentLines">Please choose header part: </label>
-                            <div style='height: 450px; overflow: auto; position: relative;'>
-                                <ul name="contentLines" style="list-style: none;">
+                            <label style="font-size: 14px; margin-bottom: 1px; margin-left: 10px; min-width: 100%" for="contentLines">
+                                <form>
+                                    <label class="radio-inline" style="padding-left: 3px;">
+                                        Header line
+                                        <input style="background-color: #94c9f3; padding-left: 5px; max-width: 100px;" type="number" name="option" ng-click="self.changeSettingOption('header', $index)" ng-model="fileObj.headerLineIndex"></label>
+                                    <label class="radio-inline" style="padding-left: 3px;">
+                                        Data first line
+                                        <input style="background-color: #F99600; padding-left: 5px; max-width: 100px;" type="number" name="option" ng-click="self.changeSettingOption('data', $index)" ng-model="fileObj.dataLineIndex"></label>
+                                    <label class="radio-inline" style="margin-left: 348px; float: right; padding: 0px; margin: 0px 25px;">
+                                        Show
+                                        <input type="number" style="max-width: 100px;" ng-model="fileObj.linesToShow" ng-change="self.changeLinesToShow($index)">
+                                    </label> 
+                                </form> 
+                            </label>
+                            <div style='height: 450px; overflow: auto; position: relative; border: 1px solid;'>
+                                <ul name="contentLines" style="list-style: none; padding: 0px;">
                                     <li ng-repeat="x in fileObj.viewContent track by $index" style="font-size: 13px;">
-                                        <label class="line" ng-class="{'selected-line': fileObj.numOfHeaderLines > $index}">
-                                            <input type="radio" name="chooseHeaderLine" ng-model="fileObj.numOfHeaderLines" ng-value="$index + 1" style="margin-right: 0px; visibility: hidden;">{{ x.toString() }}</label>
+                                        <label class="line" ng-class="{'header-line': fileObj.headerLineIndex - 1 == $index, 'data-line':fileObj.dataLineIndex - 1 == $index}" ng-click="self.chooseLineIndex(fileObj, $index + 1)">
+                                            <!-- <input type="radio" name="chooseHeaderLine" ng-model="fileObj.numOfHeaderLines" ng-value="$index + 1" style="margin-right: 0px; visibility: hidden;"> -->
+                                            <label class="index-line">{{ $index + 1 }}</label> 
+                                            {{ x.toString() }}
+                                        </label>
                                     </li>
                                 </ul>
                             </div>
@@ -99,61 +115,61 @@
                         <div ng-show="!fileObj.chooseHeaders">
                             <form class="form-inline" style="margin-left: 10px; margin-bottom: 5px;">
                                 <div class="form-group">
-                                    <label for="separator">Enter separator:</label>
+                                    <label for="separator">Separator:</label>
                                     <input type="text" class="form-control input-sm" id="separator" ng-model="fileObj.separator" ng-change="self.separatorChange($index)">
                                 </div>
-
-                                <div class="form-group" style="vertical-align: unset; min-width: 130px;">
-                                    <label for="format">Format:</label>
-                                    <div class="dropdown" name="format" id="format" style="display: inline-block;">
-                                        <a data-toggle="dropdown" href="">{{fileObj.format}}
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                            <li role="presentation">
-                                                <a role="menuitem" tabindex="-1" ng-click="self.setFormat($index, 'W-R-V')">W-R-V</a>
-                                            </li>
-                                            <li role="presentation">
-                                                <a role="menuitem" tabindex="-1" ng-click="self.setFormat($index, 'D-R-V')">D-R-V</a>
-                                            </li>
-                                            <li role="presentation">
-                                                <a role="menuitem" tabindex="-1" ng-click="self.setFormat($index, 'W-D-R-V')">W-D-R-V</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <!-- <div class="form-group" style="vertical-align: unset; min-width: 130px;"> -->
+                                <!--     <label for="format">Format:</label> -->
+                                <!--     <div class="dropdown" name="format" id="format" style="display: inline-block;"> -->
+                                <!--         <a data-toggle="dropdown" href="">{{fileObj.format}} -->
+                                <!--             <span class="caret"></span> -->
+                                <!--         </a> -->
+                                <!--         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1"> -->
+                                <!--             <li role="presentation"> -->
+                                <!--                 <a role="menuitem" tabindex="-1" ng-click="self.setFormat($index, 'W-R-V')">W-R-V</a> -->
+                                <!--             </li> -->
+                                <!--             <li role="presentation"> -->
+                                <!--                 <a role="menuitem" tabindex="-1" ng-click="self.setFormat($index, 'D-R-V')">D-R-V</a> -->
+                                <!--             </li> -->
+                                <!--             <li role="presentation"> -->
+                                <!--                 <a role="menuitem" tabindex="-1" ng-click="self.setFormat($index, 'W-D-R-V')">W-D-R-V</a> -->
+                                <!--             </li> -->
+                                <!--         </ul> -->
+                                <!--     </div> -->
+                                <!-- </div> -->
+                                <div class="form-group">
+                                    <label for="wellCol">Well column:</label>
+                                    <input type="text" style="color: red;" class="form-control input-sm" id="wellCol" ng-model="fileObj.wellCol" ng-focus="self.wellColFocus($index)" ng-change="self.changeCol(fileObj)">
                                 </div>
-                                <div class="form-group" ng-show="fileObj.format == 'W-D-R-V' || fileObj.format == 'W-R-V'">
-                                    <label for="wellCol">Enter well column:</label>
-                                    <input type="text" style="color: red;" class="form-control input-sm" id="wellCol" ng-model="fileObj.wellCol" ng-focus="self.wellColFocus($index)" ng-change="self.checkSelectDuplicate(fileObj)">
-                                </div>
-                                <div class="form-group col-ms-3" ng-show="fileObj.format == 'W-D-R-V' || fileObj.format == 'D-R-V'">
-                                    <label for="datasetCol">Enter dataset column:</label>
-                                    <input type="text" style="color: blue;" class="form-control input-sm" id="datasetCol" ng-model="fileObj.datasetCol" ng-focus="self.datasetColFocus($index)" ng-change="self.checkSelectDuplicate(fileObj)">
+                                <div class="form-group col-ms-3">
+                                    <label for="datasetCol">Dataset column:</label>
+                                    <input type="text" style="color: blue;" class="form-control input-sm" id="datasetCol" ng-model="fileObj.datasetCol" ng-focus="self.datasetColFocus($index)" ng-change="self.changeCol(fileObj)">
                                 </div>
                             </form>
-                            <div ng-show="fileObj.checkDuplicate && fileObj.format == 'W-D-R-V'">
-                                <span class="label label-danger">Please choose other column!</span>
-                            </div>
-                            <div ng-show="!fileObj.checkFullField">
-                                <span class="label label-danger">Well or Dataset isn't filled!</span>
-                            </div>
+                            <!-- <div ng-show="fileObj.checkDuplicate && fileObj.format == 'W-D-R-V'"> -->
+                            <!--     <span class="label label-danger">Please choose other column!</span> -->
+                            <!-- </div> -->
+                            <!-- <div ng-show="!fileObj.checkFullField"> -->
+                            <!--     <span class="label label-danger">Well or Dataset isn't filled!</span> -->
+                            <!-- </div> -->
                             <div style="overflow:  auto; width: 100; height:  440px;">
                                 <table style="border-collapse: collapse;" class="csv-transformer-border">
-                                    <tr ng-if="$index == fileObj.numOfHeaderLines - 2" ng-repeat="x in fileObj.tableContent track by $index">
+                                    <tr ng-if="$index == fileObj.headerLineIndex - 1" ng-repeat="x in fileObj.tableContent track by $index">
                                         </label>
-                                        <th class="csv-transformer-border"ng-class="{'well-selected': fileObj.wellCol == y}" ng-repeat="y in x track by $index" ng-show="fileObj.chooseColumn == 'well'">
+                                        <th class="csv-transformer-border column" ng-class="{'well-selected': fileObj.wellColIndex == $index, 'dataset-selected': fileObj.datasetColIndex == $index}" ng-repeat="y in x track by $index" ng-click="self.settingColumnIndex(fileObj, $index)">
                                             <label class="column">{{ y }}
-                                                <input type="radio" name="chooseWellCol" ng-model="fileObj.wellCol" ng-value="y" style="visibility: hidden" ng-click="self.checkSelectDuplicate(fileObj)">
+                                                <!-- <input type="radio" name="chooseWellCol" ng-model="fileObj.wellCol" ng-value="y" style="visibility: hidden" ng-click="self.checkSelectDuplicate(fileObj)" ng-if="fileObj.chooseColumn == 'well'"> -->
+                                                <!-- <input type="radio" name="chooseDatasetCol" ng-model="fileObj.datasetCol" ng-value="y" style="visibility: hidden" ng-click="self.checkSelectDuplicate(fileObj)" ng-if="fileObj.chooseColumn == 'dataset'"> -->
                                             </label>
                                         </th>
-                                        <th class="csv-transformer-border"ng-class="{'dataset-selected': fileObj.datasetCol == y}" ng-repeat="y in x track by $index" ng-show="fileObj.chooseColumn == 'dataset'">
-                                            <label class="column">{{ y }}
-                                                <input type="radio" name="chooseDatasetCol" ng-model="fileObj.datasetCol" ng-value="y" style="visibility: hidden" ng-click="self.checkSelectDuplicate(fileObj)">
-                                            </label>
-                                        </th>
+                                        <!-- <th class="csv-transformer-border"ng-class="{'dataset-selected': fileObj.datasetCol == y}" ng-repeat="y in x track by $index" ng-show="fileObj.chooseColumn == 'dataset'"> -->
+                                        <!--     <label class="column">{{ y }} -->
+                                        <!--         <input type="radio" name="chooseDatasetCol" ng-model="fileObj.datasetCol" ng-value="y" style="visibility: hidden" ng-click="self.checkSelectDuplicate(fileObj)"> -->
+                                        <!--     </label> -->
+                                        <!-- </th> -->
                                     </tr>
-                                    <tr ng-if="$index > fileObj.numOfHeaderLines - 2" ng-repeat="x in fileObj.tableContent track by $index">
-                                        <td class="csv-transformer-border" ng-repeat="y in x track by $index">{{ y }}
+                                    <tr ng-if="$index >= fileObj.dataLineIndex - 1" ng-repeat="x in fileObj.tableContent track by $index">
+                                        <td class="csv-transformer-border" ng-repeat="y in x track by $index" ng-class="{'well-selected': fileObj.wellColIndex == $index, 'dataset-selected': fileObj.datasetColIndex == $index}">{{ y }}
                                         </td>
                                     </tr>
                                 </table>
@@ -163,7 +179,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders" ng-disabled="fileObj.numOfHeaderLines < 0">Next</button>
                         <button type="button" class="btn btn-default" ng-click="fileObj.chooseHeaders = true" ng-show="!fileObj.chooseHeaders">Back</button>
-                        <button type="button" class="btn btn-primary" ng-show="!fileObj.chooseHeaders" ng-click="self.submitSetting($index)">OK</button>
+                        <button type="button" class="btn btn-primary" ng-click="self.submitSetting($index)" ng-show="!fileObj.chooseHeaders" data-dismiss="modal" ng-disabled="fileObj.wellColIndex < 0 && fileObj.datasetColIndex < 0">OK</button>
                     </div>
                 </div>
             </div>
