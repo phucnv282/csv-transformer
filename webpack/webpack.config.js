@@ -1,11 +1,12 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
     entry: {
-        javascript: __dirname + '/entry.js',
+        javascript: './webpack/entry.js',
     },
     output: {
-        path: __dirname + '/public',
+        path: path.join(__dirname, '../public'),
         filename: 'csv-transformer.bundle.js',
         library: 'csvTransformer',
     },
