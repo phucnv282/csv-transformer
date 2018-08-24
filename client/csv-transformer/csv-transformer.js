@@ -27,6 +27,12 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         return 'file' + index.toString();
     };
 
+    this.showSettingModal = function($index) {
+        $('.modal-dialog').draggable({
+            handle: '.modal-header',
+        });
+    };
+
     this.removeFileFromList = function(index) {
         self.files.splice(index, 1);
     };
@@ -38,9 +44,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].numOfHeaderLines > 0
             ) {
                 let file = self.files[i];
-                let headerLine = file.viewContent[
-                    file.headerLineIndex - 1
-                ].split(file.separator != '' ? file.separator : /[ \t\,\;]/);
+                let headerLine = file.tableContent[0];
                 let wellIndex = -1;
                 let datasetIndex = -1;
                 for (let i = 0; i < headerLine.length; i++) {
@@ -66,8 +70,8 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     data: {
                         file: file.file,
                         numOfHeaderLines: file.numOfHeaderLines,
-                        headerLineIndex: file.headerLineIndex - 1,
-                        dataLineIndex: file.dataLineIndex - 1,
+                        // headerLineIndex: file.headerLineIndex - 1,
+                        // dataLineIndex: file.dataLineIndex - 1,
                         format: file.format,
                         separator: file.separator,
                         wellIndex: wellIndex,
@@ -135,13 +139,20 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
 
     this.nextToSetting = function(index) {
         self.files[index].chooseHeaders = false;
-        let viewContent = self.files[index].viewContent;
+        let thisFile = self.files[index];
+        let allContent = self.files[index].allContent;
         let lines = [];
-        for (let i = 0; i < viewContent.length; i++) {
-            let line = viewContent[i].split(
-                self.files[index].separator != ''
-                    ? self.files[index].separator
-                    : /[ \t\,\;]/,
+        let header = thisFile.allContent[thisFile.headerLineIndex - 1].split(
+            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+        );
+        let unit = thisFile.allContent[thisFile.unitLineIndex - 1].split(
+            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+        );
+        lines.push(header);
+        lines.push(unit);
+        for (let i = 0; i < thisFile.linesToShow; i++) {
+            let line = allContent[thisFile.dataLineIndex - 1 + i].split(
+                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
             );
             let tarr = [];
             for (let j = 0; j < line.length; j++) {
@@ -149,7 +160,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
             }
             lines.push(tarr);
         }
-        self.files[index].tableContent = lines;
+        thisFile.tableContent = lines;
     };
 
     this.changeLinesToShow = function(index) {
@@ -234,20 +245,15 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     this.changeCol = function(file) {
         let indexFile = self.files.indexOf(file);
         let thisFile = self.files[indexFile];
-        for (
-            let i = 0;
-            i < thisFile.tableContent[thisFile.headerLineIndex - 1].length;
-            i++
-        ) {
+        for (let i = 0; i < thisFile.tableContent[0].length; i++) {
             if (thisFile.chooseColumn == 'well') {
                 if (thisFile.wellCol == '') {
                     thisFile.wellColIndex = -1;
                     break;
                 }
                 if (
-                    thisFile.tableContent[thisFile.headerLineIndex - 1][
-                        i
-                    ].toUpperCase() == thisFile.wellCol.toUpperCase()
+                    thisFile.tableContent[0][i].toUpperCase() ==
+                    thisFile.wellCol.toUpperCase()
                 ) {
                     thisFile.wellColIndex = i;
                     if (thisFile.wellColIndex == thisFile.datasetColIndex) {
@@ -264,9 +270,8 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     break;
                 }
                 if (
-                    thisFile.tableContent[thisFile.headerLineIndex - 1][
-                        i
-                    ].toUpperCase() == thisFile.datasetCol.toUpperCase()
+                    thisFile.tableContent[0][i].toUpperCase() ==
+                    thisFile.datasetCol.toUpperCase()
                 ) {
                     thisFile.datasetColIndex = i;
                     if (thisFile.wellColIndex == thisFile.datasetColIndex) {
@@ -284,22 +289,20 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     this.settingColumnIndex = function(file, indexCol) {
         let indexFile = self.files.indexOf(file);
         let thisFile = self.files[indexFile];
-        if (self.files[indexFile].chooseColumn == 'well') {
-            self.files[indexFile].wellColIndex = indexCol;
-            self.files[indexFile].wellCol =
-                thisFile.tableContent[thisFile.headerLineIndex - 1][indexCol];
+        if (thisFile.chooseColumn == 'well') {
+            thisFile.wellColIndex = indexCol;
+            thisFile.wellCol = thisFile.tableContent[0][indexCol];
         } else {
-            self.files[indexFile].datasetColIndex = indexCol;
-            self.files[indexFile].datasetCol =
-                thisFile.tableContent[thisFile.headerLineIndex - 1][indexCol];
+            thisFile.datasetColIndex = indexCol;
+            thisFile.datasetCol = thisFile.tableContent[0][indexCol];
         }
-        if (self.files[indexFile].wellCol == self.files[indexFile].datasetCol) {
-            if (self.files[indexFile].chooseColumn == 'well') {
-                self.files[indexFile].datasetCol = '';
-                self.files[indexFile].datasetColIndex = -1;
+        if (thisFile.wellCol == thisFile.datasetCol) {
+            if (thisFile.chooseColumn == 'well') {
+                thisFile.datasetCol = '';
+                thisFile.datasetColIndex = -1;
             } else {
-                self.files[indexFile].wellCol = '';
-                self.files[indexFile].wellColIndex = -1;
+                thisFile.wellCol = '';
+                thisFile.wellColIndex = -1;
             }
         }
     };
@@ -335,6 +338,22 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     //     }
     // });
 
+    this.formatShow = function(formatShort) {
+        switch (formatShort) {
+            case 'W-D-R-V':
+                return 'Well-Dataset-Reference-Value';
+                break;
+            case 'W-R-V':
+                return 'Well-Reference-Value';
+                break;
+            case 'D-R-V':
+                return 'Dataset-Reference-Value';
+                break;
+            default:
+                return '';
+        }
+    };
+
     $scope.$watch('files', function() {
         if ($scope.files) {
             $scope.files.forEach(file => {
@@ -352,7 +371,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     unitLineIndex: 0,
                     dataLineIndex: 0,
                     choosingLine: 'header',
-                    format: 'W-D-R-V',
+                    format: '',
                     separator: '',
                     wellCol: '',
                     wellColIndex: -1,

@@ -76,7 +76,7 @@
     vertical-align: middle;
     padding-right: 10px;
     padding-top: 5px;
-    max-width: 60px;
+    max-width: 30px;
 }
 
 .filesize {
@@ -85,7 +85,7 @@
 }
 
 .download-button {
-    min-width: 150%;
+    min-width: 120%;
 }
 
 .action.download {
@@ -155,7 +155,8 @@ a:hover,
     text-align: center;
     display: table-cell;
     vertical-align: top;
-    width: 110px;
+    width: 190px;
+    float: right;
 }
 
 .normal-line {
@@ -164,17 +165,17 @@ a:hover,
 }
 
 .header-line {
-    background-color: #94c9f3;
+    background-color: #00ff81;
     color: #333;
 }
 
 .unit-line {
-    background-color: #00ff8e;
+    background-color: #64beff;
     color: #333;
 }
 
 .data-line {
-    background-color: #f99600;
+    background-color: #f2a100;
     color: #333;
 }
 
