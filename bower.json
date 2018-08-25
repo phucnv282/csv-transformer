@@ -19,6 +19,7 @@
     "ng-file-upload-shim": "^12.2.13",
     "angular": "1.6.9",
     "bootstrap": "3.3.7",
-    "jquery-ui": "^1.12.1"
+    "jquery-ui": "^1.12.1",
+    "components-font-awesome": "^5.0.6"
   }
 }

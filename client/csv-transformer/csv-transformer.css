@@ -115,7 +115,8 @@ a:hover,
     display: table-cell;
     vertical-align: middle;
     text-align: left;
-    width: 10px;
+    min-width: 10px;
+    max-width: 7px;
 }
 
 .close,

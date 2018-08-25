@@ -16,7 +16,7 @@
                 <span class="glyphicon glyphicon-file"></span>
             </div>
             <div class="filename">
-                <span type="fn" style="margin-left: 7px;">{{fileObj.file.name}}</span>
+                <span type="fn">{{fileObj.file.name}}</span>
             </div>
             <div ng-hide="fileObj.canDownload != 'false'" style="float: right; margin: 0px 21px 0px 0px;">
                 <!-- <div class="setting-info"> -->
@@ -63,8 +63,8 @@
                 </div>
             </div>
             <div class="forall-wrapper" ng-show="fileObj.canDownload == 'false'">
-                <div class="forall-button" ng-click="self.settingForAllFile($index)" data-toggle="tooltip" data-placement="bottom" title="Setting for all">
-                    <span class="glyphicon glyphicon-circle-arrow-down" style="margin-right: 100%;"></span>
+                <div class="forall-button" ng-click="self.settingForAllFile($index)" data-toggle="tooltip" data-placement="bottom" title="Apply setting for all">
+                    <span class="fa fa-cogs" style="margin: 2px 0px 1px -1px;"></span>
                 </div>
             </div>
             <div class="close-wrapper">
@@ -189,9 +189,9 @@
                         </div>
                     </div>
                     <div class="modal-footer" style="    padding: 3px 7px;">
-                        <button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders" ng-disabled="fileObj.dataLineIndex <= 0 || fileObj.headerLineIndex <= 0 || fileObj.unitLineIndex <= 0">Next</button>
-                        <button type="button" class="btn btn-default" ng-click="fileObj.chooseHeaders = true" ng-show="!fileObj.chooseHeaders">Back</button>
-                        <button type="button" class="btn btn-primary" ng-click="self.submitSetting($index)" ng-show="!fileObj.chooseHeaders" data-dismiss="modal" ng-disabled="fileObj.wellColIndex < 0 && fileObj.datasetColIndex < 0">OK</button>
+                        <button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders" ng-disabled="fileObj.dataLineIndex <= 0 || fileObj.headerLineIndex <= 0 || fileObj.unitLineIndex <= 0" style="vertical-align: middle; max-height: 31px;">Next</button>
+                        <button type="button" class="btn btn-default" ng-click="fileObj.chooseHeaders = true" ng-show="!fileObj.chooseHeaders" style="vertical-align: middle; max-height: 31px;">Back</button>
+                        <button type="button" class="btn btn-primary" ng-click="self.submitSetting($index)" ng-show="!fileObj.chooseHeaders" data-dismiss="modal" ng-disabled="fileObj.wellColIndex < 0 && fileObj.datasetColIndex < 0 "style="vertical-align: middle; max-height: 31px;">OK</button>
                     </div>
                 </div>
             </div>
