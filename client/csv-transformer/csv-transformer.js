@@ -145,9 +145,14 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         let header = thisFile.allContent[thisFile.headerLineIndex - 1].split(
             thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
         );
-        let unit = thisFile.allContent[thisFile.unitLineIndex - 1].split(
-            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
-        );
+        let unit =
+            thisFile.unitLineIndex - 1 >= 0
+                ? thisFile.allContent[thisFile.unitLineIndex - 1].split(
+                      thisFile.separator != ''
+                          ? thisFile.separator
+                          : /[ \t\,\;]/,
+                  )
+                : [];
         lines.push(header);
         lines.push(unit);
         for (let i = 0; i < thisFile.linesToShow; i++) {

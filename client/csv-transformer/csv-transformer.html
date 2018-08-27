@@ -175,7 +175,7 @@
 																				<!--     </label> -->
 																				<!-- </th> -->
 																		</tr>
-																		<tr ng-if="$index == 1" ng-repeat="x in fileObj.tableContent track by $index">
+																		<tr ng-if="$index == 1 && fileObj.unitLineIndex - 1 >= 0" ng-repeat="x in fileObj.tableContent track by $index">
 																				<td class="csv-transformer-border" ng-repeat="y in x track by $index" ng-class="{'well-selected': fileObj.wellColIndex == $index, 'dataset-selected': fileObj.datasetColIndex == $index}">{{ y }}
 																				</td>
 																		</tr>
@@ -193,7 +193,7 @@
 												</div>
 										</div>
 										<div class="modal-footer" style="    padding: 3px 7px;">
-												<button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders" ng-disabled="fileObj.dataLineIndex <= 0 || fileObj.headerLineIndex <= 0 || fileObj.unitLineIndex <= 0" style="vertical-align: middle; max-height: 31px;">Next</button>
+												<button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders" ng-disabled="fileObj.dataLineIndex <= 0 || fileObj.headerLineIndex <= 0" style="vertical-align: middle; max-height: 31px;">Next</button>
 												<button type="button" class="btn btn-default" ng-click="fileObj.chooseHeaders = true" ng-show="!fileObj.chooseHeaders" style="vertical-align: middle; max-height: 31px;">Back</button>
 												<button type="button" class="btn btn-primary" ng-click="self.submitSetting($index)" ng-show="!fileObj.chooseHeaders" data-dismiss="modal" ng-disabled="fileObj.wellColIndex < 0 && fileObj.datasetColIndex < 0 "style="vertical-align: middle; max-height: 31px;">OK</button>
 										</div>
