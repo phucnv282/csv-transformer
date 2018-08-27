@@ -52,9 +52,11 @@
 										</ul>
 								</div>
 						</div>
-						<div class="file-info" style="min-width: 225px;">
+						<div style="text-align: right; margin-top: 7px; min-width: 225px;">
 								<span class="filesize"><img style="margin: 0px 10px 0px 0px;" id="spinner" ng-src="/csv/public/spinner.gif" ng-show="fileObj.canDownload == 'pending'">
-										Size: {{fileObj.size}}
+						</div>
+						<div class="file-info" style="min-width: 60px;">
+								Size: {{fileObj.size}}
 								</span>
 						</div>
 						<div class="setting-wrapper" ng-show="fileObj.canDownload == 'false'">
