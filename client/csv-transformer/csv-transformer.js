@@ -44,6 +44,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].numOfHeaderLines > 0
             ) {
                 let file = self.files[i];
+                console.log(file);
                 let headerLine = file.tableContent[0];
                 let wellIndex = -1;
                 let datasetIndex = -1;
@@ -227,6 +228,37 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].datasetCol = thisFile.datasetCol;
                 self.files[i].datasetColIndex = thisFile.datasetColIndex;
                 // });
+
+                let file = self.files[i];
+                let lines = [];
+                let header = file.allContent[
+                    file.headerLineIndex - 1
+                ].split(
+                    file.separator != '' ? file.separator : /[ \t\,\;]/,
+                );
+                let unit =
+                    file.unitLineIndex - 1 >= 0
+                        ? file.allContent[file.unitLineIndex - 1].split(
+                              file.separator != ''
+                                  ? file.separator
+                                  : /[ \t\,\;]/,
+                          )
+                        : [];
+                lines.push(header);
+                lines.push(unit);
+                for (let i = 0; i < 100; i++) {
+                    let line = file.allContent[file.dataLineIndex - 1 + i].split(
+                        file.separator != ''
+                            ? file.separator
+                            : /[ \t\,\;]/,
+                    );
+                    let tarr = [];
+                    for (let j = 0; j < line.length; j++) {
+                        tarr.push(line[j]);
+                    }
+                    lines.push(tarr);
+                }
+                self.files[i].tableContent = lines;
             }
         }
     };
