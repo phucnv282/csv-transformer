@@ -155,7 +155,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 : [];
         lines.push(header);
         lines.push(unit);
-        for (let i = 0; i < thisFile.linesToShow; i++) {
+        for (let i = 0; i < 100; i++) {
             let line = allContent[thisFile.dataLineIndex - 1 + i].split(
                 thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
             );
@@ -223,7 +223,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].format = thisFile.format;
                 self.files[i].separator = thisFile.separator;
                 self.files[i].wellCol = thisFile.wellCol;
+                self.files[i].wellColIndex = thisFile.wellColIndex;
                 self.files[i].datasetCol = thisFile.datasetCol;
+                self.files[i].datasetColIndex = thisFile.datasetColIndex;
                 // });
             }
         }

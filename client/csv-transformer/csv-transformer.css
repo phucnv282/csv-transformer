@@ -199,7 +199,7 @@ a:hover,
     border: 1px solid black;
     padding: 7px;
     word-wrap: break-word;
-    min-width: 110px;
+    min-width: 105px;
 }
 
 .well-selected {
