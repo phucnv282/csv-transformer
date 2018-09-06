@@ -71,8 +71,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     data: {
                         file: file.file,
                         numOfHeaderLines: file.numOfHeaderLines,
-                        // headerLineIndex: file.headerLineIndex - 1,
-                        // dataLineIndex: file.dataLineIndex - 1,
+                        headerLineIndex: file.headerLineIndex - 1,
+                        unitLineIndex: file.unitLineIndex - 1,
+                        dataLineIndex: file.dataLineIndex - 1,
                         format: file.format,
                         separator: file.separator,
                         wellIndex: wellIndex,
@@ -231,9 +232,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
 
                 let file = self.files[i];
                 let lines = [];
-                let header = file.allContent[
-                    file.headerLineIndex - 1
-                ].split(
+                let header = file.allContent[file.headerLineIndex - 1].split(
                     file.separator != '' ? file.separator : /[ \t\,\;]/,
                 );
                 let unit =
@@ -247,10 +246,10 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 lines.push(header);
                 lines.push(unit);
                 for (let i = 0; i < 100; i++) {
-                    let line = file.allContent[file.dataLineIndex - 1 + i].split(
-                        file.separator != ''
-                            ? file.separator
-                            : /[ \t\,\;]/,
+                    let line = file.allContent[
+                        file.dataLineIndex - 1 + i
+                    ].split(
+                        file.separator != '' ? file.separator : /[ \t\,\;]/,
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {

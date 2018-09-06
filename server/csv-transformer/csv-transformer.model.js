@@ -11,7 +11,9 @@ function csvTransform(req, res) {
             let outputUrl = '';
             let buffer = '';
             let header = '';
-            let numOfHeaderLines = parseInt(req.body.numOfHeaderLines);
+            let headerLineIndex = parseInt(req.body.headerLineIndex);
+            let unitLineIndex = parseInt(req.body.unitLineIndex);
+            let dataLineIndex = parseInt(req.body.dataLineIndex);
             let format = req.body.format;
             let wellIndex = parseInt(req.body.wellIndex);
             let datasetIndex = parseInt(req.body.datasetIndex);
@@ -32,7 +34,11 @@ function csvTransform(req, res) {
                 );
 
                 let lineWellName = '';
-                if (count >= numOfHeaderLines - 2) {
+                if (
+                    count == headerLineIndex ||
+                    count == unitLineIndex ||
+                    count >= dataLineIndex
+                ) {
                     if (format == 'W-R-V' || format == 'D-R-V') {
                         if (format == 'W-R-V') {
                             lineWellName = arrayOfLine[wellIndex];
@@ -53,19 +59,20 @@ function csvTransform(req, res) {
                     }
                 }
 
-                if (count < numOfHeaderLines) {
+                if (count == headerLineIndex || count == unitLineIndex) {
                     header += line + '\n';
-                } else if (count == numOfHeaderLines) {
+                } else if (count == dataLineIndex) {
                     currentWell = lineWellName;
                     let fileName =
-                        inputName.slice(0, inputName.indexOf('-') + 1) +
+                        inputName.slice(0, inputName.indexOf('-')) +
+                        '0-' +
                         currentWell +
                         '.csv';
                     outputUrl = 'uploads/' + fileName;
                     // console.log(outputUrl);
                     fs.writeFileSync(outputUrl, header + line + '\n');
                     outputFiles.push(fileName);
-                } else {
+                } else if (count > dataLineIndex) {
                     if (currentWell == lineWellName) {
                         buffer += line + '\n';
                         bufferCount++;
@@ -83,7 +90,8 @@ function csvTransform(req, res) {
                             }
                             currentWell = lineWellName;
                             let fileName =
-                                inputName.slice(0, inputName.indexOf('-') + 1) +
+                                inputName.slice(0, inputName.indexOf('-')) +
+                                '0-' +
                                 currentWell +
                                 '.csv';
                             outputUrl = 'uploads/' + fileName;
@@ -100,6 +108,8 @@ function csvTransform(req, res) {
                     fs.appendFileSync(outputUrl, buffer);
                 }
                 fs.unlinkSync(inputUrl);
+                console.log(inputUrl);
+                console.log(outputUrl);
                 console.log('===>WriteFileSuccessfully');
                 resolve(outputFiles);
             });
