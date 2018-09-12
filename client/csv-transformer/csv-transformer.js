@@ -263,13 +263,25 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     };
 
     this.separatorChange = function(index) {
-        let viewContent = self.files[index].viewContent;
+        let thisFile = self.files[index];
+        let allContent = self.files[index].allContent;
         let lines = [];
-        for (let i = 0; i < viewContent.length; i++) {
-            let line = viewContent[i].split(
-                self.files[index].separator != ''
-                    ? self.files[index].separator
-                    : /[ \t\,\;]/,
+        let header = thisFile.allContent[thisFile.headerLineIndex - 1].split(
+            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+        );
+        let unit =
+            thisFile.unitLineIndex - 1 >= 0
+                ? thisFile.allContent[thisFile.unitLineIndex - 1].split(
+                      thisFile.separator != ''
+                          ? thisFile.separator
+                          : /[ \t\,\;]/,
+                  )
+                : [];
+        lines.push(header);
+        lines.push(unit);
+        for (let i = 0; i < 100; i++) {
+            let line = allContent[thisFile.dataLineIndex - 1 + i].split(
+                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
             );
             let tarr = [];
             for (let j = 0; j < line.length; j++) {
@@ -277,7 +289,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
             }
             lines.push(tarr);
         }
-        self.files[index].tableContent = lines;
+        thisFile.tableContent = lines;
     };
 
     this.changeCol = function(file) {
