@@ -1,7 +1,11 @@
 <div>
 	<form>
 		<div class="form-group">
-			<div ngf-drop ngf-select ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true">Drop/Click to upload</div>
+			<div ngf-drop ngf-select ng-model="files" class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true">
+				<span style="text-decoration: underline; color: #337ab7">
+					Drop/Click to upload
+				</span>
+			</div>
 		</div>
 		<div>
 			<button class="start-convert-button" ng-click="self.onConvertButtonClicked()" ng-hide="self.files.length == 0">
