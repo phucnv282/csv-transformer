@@ -87,7 +87,7 @@
 									</label>
 									<label class="radio-inline" style="padding-left: 3px;">
 										Data first line
-										<input style="background-color: #F2A100; padding-left: 5px; max-width: 100px;" class="form-control input-sm" type="number" name="option" ng-click="self.changeSettingOption('data', $index)" ng-model="fileObj.dataLineIndex" ng-change="self.checkDuplicateLine('data', $index)" ng-model-options="{updateOn: 'change'}">
+										<input style="background-color: #F2A100; padding-left: 5px; max-width: 100px;" class="form-control input-sm" type="number" name="option" ng-click="self.changeSettingOption('data', $index)" ng-model="fileObj.dataLineIndex" ng-change="self.checkDuplicateLine('data', $index); fileObj.numOfHeaderLines = fileObj.dataLineIndex - 1" ng-model-options="{updateOn: 'change'}">
 									</label>
 									<label class="radio-inline" style="margin-left: 348px; float: right; padding: 0px; margin: 0px 25px;">
 										Show

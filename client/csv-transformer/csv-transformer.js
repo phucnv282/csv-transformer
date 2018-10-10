@@ -3,7 +3,7 @@ var app = angular.module('app', ['ngFileUpload']);
 app.component('csvTransformer', {
     template: require('./csv-transformer.html'),
     controller: Controller,
-    controllerAs: 'self',
+    controllerAs: 'self'
 });
 
 Controller.$inject = [
@@ -12,7 +12,7 @@ Controller.$inject = [
     '$element',
     '$window',
     '$http',
-    'Upload',
+    'Upload'
 ];
 
 function Controller($scope, $timeout, $element, $window, $http, Upload) {
@@ -29,7 +29,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
 
     this.showSettingModal = function($index) {
         $('.modal-dialog').draggable({
-            handle: '.modal-header',
+            handle: '.modal-header'
         });
     };
 
@@ -38,7 +38,12 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     };
 
     this.onConvertButtonClicked = function() {
+        console.log('Convert CLicked');
         for (let i = 0; i < self.files.length; i++) {
+            console.log(
+                self.files[i].canDownload,
+                self.files[i].numOfHeaderLines
+            );
             if (
                 self.files[i].canDownload == 'false' &&
                 self.files[i].numOfHeaderLines > 0
@@ -77,8 +82,8 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                         format: file.format,
                         separator: file.separator,
                         wellIndex: wellIndex,
-                        datasetIndex: datasetIndex,
-                    },
+                        datasetIndex: datasetIndex
+                    }
                 }).then(
                     function(res) {
                         console.log('===>Success');
@@ -91,7 +96,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     },
                     function(res) {
                         console.log('Error status: ' + res.status);
-                    },
+                    }
                 );
             }
         }
@@ -145,21 +150,21 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         let allContent = self.files[index].allContent;
         let lines = [];
         let header = thisFile.allContent[thisFile.headerLineIndex - 1].split(
-            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
         );
         let unit =
             thisFile.unitLineIndex - 1 >= 0
                 ? thisFile.allContent[thisFile.unitLineIndex - 1].split(
                       thisFile.separator != ''
                           ? thisFile.separator
-                          : /[ \t\,\;]/,
+                          : /[ \t\,\;]/
                   )
                 : [];
         lines.push(header);
         lines.push(unit);
         for (let i = 0; i < 100; i++) {
             let line = allContent[thisFile.dataLineIndex - 1 + i].split(
-                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
             );
             let tarr = [];
             for (let j = 0; j < line.length; j++) {
@@ -175,7 +180,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         if (thisFile.viewContent.length > thisFile.linesToShow) {
             thisFile.viewContent.splice(
                 thisFile.linesToShow,
-                thisFile.viewContent.length - thisFile.linesToShow,
+                thisFile.viewContent.length - thisFile.linesToShow
             );
         } else if (thisFile.viewContent.length < thisFile.linesToShow) {
             for (
@@ -233,14 +238,14 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 let file = self.files[i];
                 let lines = [];
                 let header = file.allContent[file.headerLineIndex - 1].split(
-                    file.separator != '' ? file.separator : /[ \t\,\;]/,
+                    file.separator != '' ? file.separator : /[ \t\,\;]/
                 );
                 let unit =
                     file.unitLineIndex - 1 >= 0
                         ? file.allContent[file.unitLineIndex - 1].split(
                               file.separator != ''
                                   ? file.separator
-                                  : /[ \t\,\;]/,
+                                  : /[ \t\,\;]/
                           )
                         : [];
                 lines.push(header);
@@ -249,7 +254,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     let line = file.allContent[
                         file.dataLineIndex - 1 + i
                     ].split(
-                        file.separator != '' ? file.separator : /[ \t\,\;]/,
+                        file.separator != '' ? file.separator : /[ \t\,\;]/
                     );
                     let tarr = [];
                     for (let j = 0; j < line.length; j++) {
@@ -267,21 +272,21 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         let allContent = self.files[index].allContent;
         let lines = [];
         let header = thisFile.allContent[thisFile.headerLineIndex - 1].split(
-            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+            thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
         );
         let unit =
             thisFile.unitLineIndex - 1 >= 0
                 ? thisFile.allContent[thisFile.unitLineIndex - 1].split(
                       thisFile.separator != ''
                           ? thisFile.separator
-                          : /[ \t\,\;]/,
+                          : /[ \t\,\;]/
                   )
                 : [];
         lines.push(header);
         lines.push(unit);
         for (let i = 0; i < 100; i++) {
             let line = allContent[thisFile.dataLineIndex - 1 + i].split(
-                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/,
+                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
             );
             let tarr = [];
             for (let j = 0; j < line.length; j++) {
@@ -428,7 +433,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     datasetCol: '',
                     datasetColIndex: -1,
                     chooseHeaders: true,
-                    chooseColumn: 'well',
+                    chooseColumn: 'well'
                 };
 
                 var readFile = new FileReader();
