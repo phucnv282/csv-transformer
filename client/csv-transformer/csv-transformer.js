@@ -173,6 +173,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
             lines.push(tarr);
         }
         thisFile.tableContent = lines;
+        console.log(thisFile.tableContent);
     };
 
     this.changeLinesToShow = function(index) {
@@ -422,9 +423,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     fileOnServer: [],
                     size: self.formatFileSize(file.size, 1),
                     numOfHeaderLines: 0,
-                    headerLineIndex: 0,
-                    unitLineIndex: 0,
-                    dataLineIndex: 0,
+                    headerLineIndex: 1,
+                    unitLineIndex: 2,
+                    dataLineIndex: 3,
                     choosingLine: 'header',
                     format: '',
                     separator: '',
