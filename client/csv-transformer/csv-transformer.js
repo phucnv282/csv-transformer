@@ -51,22 +51,22 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 let file = self.files[i];
                 console.log(file);
                 let headerLine = file.tableContent[0];
-                let wellIndex = -1;
-                let datasetIndex = -1;
-                for (let i = 0; i < headerLine.length; i++) {
-                    if (
-                        file.wellCol.toUpperCase() ==
-                        headerLine[i].toUpperCase()
-                    ) {
-                        wellIndex = i;
-                    }
-                    if (
-                        file.datasetCol.toUpperCase() ==
-                        headerLine[i].toUpperCase()
-                    ) {
-                        datasetIndex = i;
-                    }
-                }
+                let wellIndex = file.wellColIndex - 1;
+                let datasetIndex = file.datasetColIndex - 1;
+                // for (let i = 0; i < headerLine.length; i++) {
+                //     if (
+                //         file.wellCol.toUpperCase() ==
+                //         headerLine[i].toUpperCase()
+                //     ) {
+                //         wellIndex = i;
+                //     }
+                //     if (
+                //         file.datasetCol.toUpperCase() ==
+                //         headerLine[i].toUpperCase()
+                //     ) {
+                //         datasetIndex = i;
+                //     }
+                // }
 
                 self.files[i].canDownload = 'pending';
 
@@ -152,14 +152,16 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         let header = thisFile.allContent[thisFile.headerLineIndex - 1].split(
             thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
         );
-        let unit =
-            thisFile.unitLineIndex - 1 >= 0
-                ? thisFile.allContent[thisFile.unitLineIndex - 1].split(
-                      thisFile.separator != ''
-                          ? thisFile.separator
-                          : /[ \t\,\;]/
-                  )
-                : [];
+        let unit = [];
+        if (thisFile.unitLineIndex - 1 >= 0) {
+            unit = thisFile.allContent[thisFile.unitLineIndex - 1].split(
+                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
+            );
+        } else {
+            unit = new Array(header.length);
+            unit.map(e => '');
+        }
+
         lines.push(header);
         lines.push(unit);
         for (let i = 0; i < 100; i++) {
@@ -231,9 +233,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].format = thisFile.format;
                 self.files[i].separator = thisFile.separator;
                 self.files[i].wellCol = thisFile.wellCol;
-                self.files[i].wellColIndex = thisFile.wellColIndex;
+                self.files[i].wellColIndex = thisFile.wellColIndex - 1;
                 self.files[i].datasetCol = thisFile.datasetCol;
-                self.files[i].datasetColIndex = thisFile.datasetColIndex;
+                self.files[i].datasetColIndex = thisFile.datasetColIndex - 1;
                 // });
 
                 let file = self.files[i];
@@ -298,49 +300,49 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         thisFile.tableContent = lines;
     };
 
-    this.changeCol = function(file) {
-        let indexFile = self.files.indexOf(file);
-        let thisFile = self.files[indexFile];
-        for (let i = 0; i < thisFile.tableContent[0].length; i++) {
-            if (thisFile.chooseColumn == 'well') {
-                if (thisFile.wellCol == '') {
-                    thisFile.wellColIndex = -1;
-                    break;
-                }
-                if (
-                    thisFile.tableContent[0][i].toUpperCase() ==
-                    thisFile.wellCol.toUpperCase()
-                ) {
-                    thisFile.wellColIndex = i;
-                    if (thisFile.wellColIndex == thisFile.datasetColIndex) {
-                        thisFile.datasetColIndex = -1;
-                        thisFile.datasetCol = '';
-                    }
-                    break;
-                } else {
-                    thisFile.wellColIndex = -1;
-                }
-            } else {
-                if (thisFile.datasetCol == '') {
-                    thisFile.datasetColIndex = -1;
-                    break;
-                }
-                if (
-                    thisFile.tableContent[0][i].toUpperCase() ==
-                    thisFile.datasetCol.toUpperCase()
-                ) {
-                    thisFile.datasetColIndex = i;
-                    if (thisFile.wellColIndex == thisFile.datasetColIndex) {
-                        thisFile.wellColIndex = -1;
-                        thisFile.wellCol = '';
-                    }
-                    break;
-                } else {
-                    thisFile.datasetColIndex = -1;
-                }
-            }
-        }
-    };
+    // this.changeCol = function(file) {
+    //     let indexFile = self.files.indexOf(file);
+    //     let thisFile = self.files[indexFile];
+    //     for (let i = 0; i < thisFile.tableContent[0].length; i++) {
+    //         if (thisFile.chooseColumn == 'well') {
+    //             if (thisFile.wellCol == '') {
+    //                 thisFile.wellColIndex = 0;
+    //                 break;
+    //             }
+    //             if (
+    //                 thisFile.tableContent[0][i].toUpperCase() ==
+    //                 thisFile.wellCol.toUpperCase()
+    //             ) {
+    //                 thisFile.wellColIndex = i + 1;
+    //                 if (thisFile.wellColIndex == thisFile.datasetColIndex) {
+    //                     thisFile.datasetColIndex = 0;
+    //                     thisFile.datasetCol = '';
+    //                 }
+    //                 break;
+    //             } else {
+    //                 thisFile.wellColIndex = 0;
+    //             }
+    //         } else {
+    //             if (thisFile.datasetCol == '') {
+    //                 thisFile.datasetColIndex = 0;
+    //                 break;
+    //             }
+    //             if (
+    //                 thisFile.tableContent[0][i].toUpperCase() ==
+    //                 thisFile.datasetCol.toUpperCase()
+    //             ) {
+    //                 thisFile.datasetColIndex = i + 1;
+    //                 if (thisFile.wellColIndex == thisFile.datasetColIndex) {
+    //                     thisFile.wellColIndex = 0;
+    //                     thisFile.wellCol = '';
+    //                 }
+    //                 break;
+    //             } else {
+    //                 0;
+    //             }
+    //         }
+    //     }
+    // };
 
     this.settingColumnIndex = function(file, indexCol) {
         let indexFile = self.files.indexOf(file);
@@ -352,13 +354,13 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
             thisFile.datasetColIndex = indexCol;
             thisFile.datasetCol = thisFile.tableContent[0][indexCol];
         }
-        if (thisFile.wellCol == thisFile.datasetCol) {
+        if (thisFile.wellColIndex == thisFile.datasetColIndex) {
             if (thisFile.chooseColumn == 'well') {
-                thisFile.datasetCol = '';
-                thisFile.datasetColIndex = -1;
+                // thisFile.datasetCol = '';
+                thisFile.datasetColIndex = 0;
             } else {
-                thisFile.wellCol = '';
-                thisFile.wellColIndex = -1;
+                // thisFile.wellCol = '';
+                thisFile.wellColIndex = 0;
             }
         }
     };
@@ -373,11 +375,11 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
 
     this.submitSetting = function(index) {
         let file = self.files[index];
-        if (file.wellColIndex >= 0 && file.datasetColIndex >= 0) {
+        if (file.wellColIndex > 0 && file.datasetColIndex > 0) {
             self.files[index].format = 'W-D-R-V';
-        } else if (file.wellColIndex >= 0 && file.datasetColIndex < 0) {
+        } else if (file.wellColIndex > 0 && file.datasetColIndex <= 0) {
             self.files[index].format = 'W-R-V';
-        } else if (file.wellColIndex < 0 && file.datasetColIndex >= 0) {
+        } else if (file.wellColIndex <= 0 && file.datasetColIndex > 0) {
             self.files[index].format = 'D-R-V';
         }
     };
@@ -430,9 +432,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     format: '',
                     separator: '',
                     wellCol: '',
-                    wellColIndex: -1,
+                    wellColIndex: 1,
                     datasetCol: '',
-                    datasetColIndex: -1,
+                    datasetColIndex: 2,
                     chooseHeaders: true,
                     chooseColumn: 'well'
                 };

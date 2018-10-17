@@ -116,29 +116,36 @@
 								</div>
 								<div class="form-group" style="max-width: 30%;">
 									<label for="wellCol">Well Column: </label>
-									<input type="text" style="background-color: #B7EBF5; max-width: 55%" class="form-control input-sm" id="wellCol" ng-model="fileObj.wellCol" ng-focus="self.wellColFocus($index)" ng-change="self.changeCol(fileObj)">
+									<input type="number" style="background-color: #B7EBF5; max-width: 55%" class="form-control input-sm" id="wellCol" ng-model="fileObj.wellColIndex" ng-model-options="{updateOn: 'change'}" ng-focus="self.wellColFocus($index)" ng-change="self.settingColumnIndex(fileObj, fileObj.wellColIndex)">
 								</div>
 								<div class="form-group" style="max-width: 30%;">
 									<label for="datasetCol">Dataset Column: </label>
-									<input type="text" style="background-color: #8AFF8A; max-width: 55%" class="form-control input-sm" id="datasetCol" ng-model="fileObj.datasetCol" ng-focus="self.datasetColFocus($index)" ng-change="self.changeCol(fileObj)">
+									<input type="number" style="background-color: #8AFF8A; max-width: 55%" class="form-control input-sm" id="datasetCol" ng-model="fileObj.datasetColIndex" ng-model-options="{updateOn: 'change'}" ng-focus="self.datasetColFocus($index)" ng-change="self.settingColumnIndex(fileObj, fileObj.datasetColIndex)">
 								</div>
 							</form>
 							<div style="overflow: auto; width: 100%; max-height: 420px">
 								<table style="border-collapse: collapse;" class="csv-transformer-border">
 									<tr ng-if="$index == 0" ng-repeat="x in fileObj.tableContent track by $index">
-										</label>
-										<th class="csv-transformer-border column" ng-class="{'well-selected': fileObj.wellColIndex == $index, 'dataset-selected': fileObj.datasetColIndex == $index}" ng-repeat="y in x track by $index" ng-click="self.settingColumnIndex(fileObj, $index)">
-											<label class="column">{{ y }}
-											</label>
+										<th class="csv-transformer-border column"></th>
+										<th style="font-size: 12px;" class="csv-transformer-border column" ng-repeat="y in x track by $index" ng-click="self.settingColumnIndex(fileObj, $index + 1)">{{ $index + 1 }}
 										</th>
 									</tr>
-									<tr ng-if="$index == 1 && fileObj.unitLineIndex - 1 >= 0" ng-repeat="x in fileObj.tableContent track by $index">
-										<td style="font-size: 13px;"class="csv-transformer-border" ng-repeat="y in x track by $index" ng-class="{'well-selected': fileObj.wellColIndex == $index, 'dataset-selected': fileObj.datasetColIndex == $index}">{{ y }}
+									<tr style="font-size: 12px;" ng-if="$index == 0" ng-repeat="x in fileObj.tableContent track by $index">
+										<td class="csv-transformer-border column">Header Line</td>
+										<td class="csv-transformer-border column" ng-class="{'well-selected': fileObj.wellColIndex == $index + 1, 'dataset-selected': fileObj.datasetColIndex == $index + 1}" ng-repeat="y in x track by $index">
+											<label style="font-weight: unset;" class="column">{{ y }}
+											</label>
+										</td>
+									</tr>
+									<tr style="font-size: 12px;" ng-if="$index == 1" ng-repeat="x in fileObj.tableContent track by $index">
+										<td class="csv-transformer-border column">Unit Line</td>
+										<td class="csv-transformer-border" ng-repeat="y in x track by $index" ng-class="{'well-selected': fileObj.wellColIndex == $index + 1, 'dataset-selected': fileObj.datasetColIndex == $index + 1}">{{ y }}
 										</td>
 									</tr>
 
-									<tr ng-if="$index >= 2" ng-repeat="x in fileObj.tableContent track by $index">
-										<td class="csv-transformer-border" ng-repeat="y in x track by $index" ng-class="{'well-selected': fileObj.wellColIndex == $index, 'dataset-selected': fileObj.datasetColIndex == $index}">{{ y }}
+									<tr style="font-size: 12px;" ng-if="$index >= 2" ng-repeat="x in fileObj.tableContent track by $index">
+										<td class="csv-transformer-border column">{{ $index - 1 }}</td>
+										<td class="csv-transformer-border" ng-repeat="y in x track by $index" ng-class="{'well-selected': fileObj.wellColIndex == $index + 1, 'dataset-selected': fileObj.datasetColIndex == $index + 1}">{{ y }}
 										</td>
 									</tr>
 								</table>
@@ -148,7 +155,7 @@
 					<div class="modal-footer" style="padding: 10px;">
 						<button type="button" class="btn btn-default" ng-click="self.nextToSetting($index)" ng-show="fileObj.chooseHeaders" ng-disabled="fileObj.dataLineIndex <= 0 || fileObj.headerLineIndex <= 0" style="vertical-align: middle; max-height: 31px;">Next</button>
 						<button type="button" class="btn btn-default" ng-click="fileObj.chooseHeaders = true" ng-show="!fileObj.chooseHeaders" style="vertical-align: middle; max-height: 31px;">Back</button>
-						<button type="button" class="btn btn-primary" ng-click="self.submitSetting($index)" ng-show="!fileObj.chooseHeaders" data-dismiss="modal" ng-disabled="fileObj.wellColIndex < 0 && fileObj.datasetColIndex < 0 "style="vertical-align: middle; max-height: 31px;">OK</button>
+						<button type="button" class="btn btn-primary" ng-click="self.submitSetting($index)" ng-show="!fileObj.chooseHeaders" data-dismiss="modal" ng-disabled="fileObj.wellColIndex <= 0 && fileObj.datasetColIndex <= 0 "style="vertical-align: middle; max-height: 31px;">OK</button>
 					</div>
 				</div>
 			</div>
