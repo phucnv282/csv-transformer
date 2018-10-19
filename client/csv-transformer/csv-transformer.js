@@ -236,9 +236,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].format = thisFile.format;
                 self.files[i].separator = thisFile.separator;
                 self.files[i].wellCol = thisFile.wellCol;
-                self.files[i].wellColIndex = thisFile.wellColIndex - 1;
+                self.files[i].wellColIndex = thisFile.wellColIndex;
                 self.files[i].datasetCol = thisFile.datasetCol;
-                self.files[i].datasetColIndex = thisFile.datasetColIndex - 1;
+                self.files[i].datasetColIndex = thisFile.datasetColIndex;
                 // });
 
                 let file = self.files[i];
