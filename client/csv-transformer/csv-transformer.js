@@ -38,7 +38,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     };
 
     this.onConvertButtonClicked = function() {
-        console.log('Convert CLicked');
+        console.log('Convert Clicked');
         for (let i = 0; i < self.files.length; i++) {
             console.log(
                 self.files[i].canDownload,
@@ -49,7 +49,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                 self.files[i].numOfHeaderLines > 0
             ) {
                 let file = self.files[i];
-                console.log(file);
+                // console.log(file);
                 let headerLine = file.tableContent[0];
                 let wellIndex = file.wellColIndex - 1;
                 let datasetIndex = file.datasetColIndex - 1;
@@ -178,7 +178,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
             }
         }
         thisFile.tableContent = lines;
-        console.log(thisFile.tableContent);
+        // console.log(thisFile.tableContent);
     };
 
     this.changeLinesToShow = function(index) {
@@ -416,6 +416,11 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     };
 
     $scope.$watch('files', function() {
+        let defaultLine = {
+            header: 1,
+            unit: 2,
+            data: 3
+        };
         if ($scope.files) {
             $scope.files.forEach(file => {
                 let myFile = {
@@ -427,10 +432,10 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     canDownload: 'false',
                     fileOnServer: [],
                     size: self.formatFileSize(file.size, 1),
-                    numOfHeaderLines: 0,
-                    headerLineIndex: 1,
-                    unitLineIndex: 2,
-                    dataLineIndex: 3,
+                    numOfHeaderLines: defaultLine.data - 1,
+                    headerLineIndex: defaultLine.header,
+                    unitLineIndex: defaultLine.unit,
+                    dataLineIndex: defaultLine.data,
                     choosingLine: 'header',
                     format: '',
                     separator: '',
