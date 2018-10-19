@@ -165,14 +165,17 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         lines.push(header);
         lines.push(unit);
         for (let i = 0; i < 100; i++) {
-            let line = allContent[thisFile.dataLineIndex - 1 + i].split(
-                thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
-            );
-            let tarr = [];
-            for (let j = 0; j < line.length; j++) {
-                tarr.push(line[j]);
+            let line = allContent[thisFile.dataLineIndex - 1 + i];
+            if (line) {
+                line = line.split(
+                    thisFile.separator != '' ? thisFile.separator : /[ \t\,\;]/
+                );
+                let tarr = [];
+                for (let j = 0; j < line.length; j++) {
+                    tarr.push(line[j]);
+                }
+                lines.push(tarr);
             }
-            lines.push(tarr);
         }
         thisFile.tableContent = lines;
         console.log(thisFile.tableContent);
