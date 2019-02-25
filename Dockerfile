@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 FROM node:8.11.3-alpine as builder
 
 WORKDIR /app
@@ -15,6 +14,6 @@ COPY --from=builder /usr/local/bin/node  /usr/bin
 COPY --from=builder /usr/lib/libgcc* /usr/lib/libstdc* /usr/lib/
 COPY --from=builder /app .
  
-EXPOSE 8000
+EXPOSE 80
 
 CMD ["node", "app.js"]

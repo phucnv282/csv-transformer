@@ -10,9 +10,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/csv', express.static(path.join(__dirname)));
 app.use('/csv', require('./server/app.router'));
 app.use('/ip', (req, res) => {
-    res.send(req.connection.remoteAddress);
+  res.send(req.connection.remoteAddress);
 });
 
-app.listen('8000', '0.0.0.0', function() {
-    console.log('Listening on port 8000');
+app.listen('80', '0.0.0.0', function() {
+  console.log('Listening on port 80');
 });
