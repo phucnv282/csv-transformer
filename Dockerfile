@@ -14,6 +14,6 @@ COPY --from=builder /usr/local/bin/node  /usr/bin
 COPY --from=builder /usr/lib/libgcc* /usr/lib/libstdc* /usr/lib/
 COPY --from=builder /app .
  
-EXPOSE 80
+EXPOSE 8000
 
 CMD ["node", "app.js"]
