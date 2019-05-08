@@ -29,15 +29,15 @@
 				</div>
 			</div>
 			<div style="text-align: center; margin-top: 7px;" ng-class="{'download-button': fileObj.canDownload == 'true'}">
-				<div style="text-align: right; margin-right: 10px;" class="dropdown" name="format" id="format" style="display: inline-block;" ng-show="fileObj.canDownload == 'true'">
-					<a data-toggle="dropdown" href="">Download
+				<div style="text-align: right; margin-right: 10px;" ng-class="fileObj.showDownload ? 'dropdown' : 'dropup'" name="format" id="format" style="display: inline-block;" ng-show="fileObj.canDownload == 'true'">
+					<a data-toggle="dropdown" ng-click="fileObj.showDownload = !fileObj.showDownload" href="">Download
 						<span class="caret"></span>
 					</a>
-					<ul style="padding-left: 7px; margin-left: 88%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="margin-left: 80%;">
-						<div ng-repeat="name in fileObj.fileOnServer track by $index">
-							<a role="menuitem" tabindex="-1" href="/csv/download?fileName={{ name }}" download>{{ name.slice(name.indexOf('-') + 1) }}</a>
-						</div>
-					</ul>
+					<!-- <ul style="padding-left: 7px; margin-left: 88%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="margin-left: 80%;"> -->
+					<!-- 	<div ng-repeat="name in fileObj.fileOnServer track by $index"> -->
+					<!-- 		<a role="menuitem" tabindex="-1" href="/csv/download?fileName={{ name }}" download>{{ name.slice(name.indexOf('-') + 1) }}</a> -->
+					<!-- 	</div> -->
+					<!-- </ul> -->
 				</div>
 			</div>
 			<div style="text-align: right; margin-top: 7px; min-width: 225px;">
@@ -63,9 +63,20 @@
 					glyphicon glyphicon-remove-circle"></span>
 				</div>
 			</div>
-
 		</div>
-
+		<div style="width:95%; padding: 0px 0px; margin: 0px auto 0px;" ng-if="fileObj.showDownload">
+			<table class="text-on-table table table-bordered" style="margin-bottom: 0">
+				<thead>
+				</thead>
+				<tbody>
+					<tr ng-repeat="name in fileObj.fileOnServer">
+						<td>
+							<a role="menuitem" tabindex="-1" href="/csv/download?fileName={{ name }}" download>{{ name.slice(name.indexOf('-') + 1) }}</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<div class="modal fade" data-backdrop="static" data-keyboard="false" id="{{self.id($index)}}">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">

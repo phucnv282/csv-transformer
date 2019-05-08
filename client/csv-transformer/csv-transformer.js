@@ -430,6 +430,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     tableContent: [],
                     linesToShow: 100,
                     canDownload: 'false',
+					showDownload: true,
                     fileOnServer: [],
                     size: self.formatFileSize(file.size, 1),
                     numOfHeaderLines: defaultLine.data - 1,
