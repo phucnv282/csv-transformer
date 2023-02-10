@@ -21,6 +21,7 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
     this.$onInit = function() {
         self.allFileOnServer = [];
         self.files = [];
+        self.showDownloadAll = false;
     };
 
     this.id = function(index) {
@@ -35,6 +36,9 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
 
     this.removeFileFromList = function(index) {
         self.files.splice(index, 1);
+        if (!self.files.length) {
+            self.showDownloadAll = false
+        }
     };
 
     this.onConvertButtonClicked = function() {
@@ -92,7 +96,11 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                             self.allFileOnServer.push(file);
                         });
                         self.files[i].canDownload = 'true';
-                        self.files[i].fileOnServer = res.data;
+                        self.files[i].fileOnServer = res.data.map(item => ({
+                            name: item,
+                            enableDownload: true
+                        }));
+                        self.showDownloadAll = true;
                     },
                     function(res) {
                         console.log('Error status: ' + res.status);
@@ -101,6 +109,35 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
             }
         }
     };
+
+    this.onDownloadAllButtonClicked = () => {
+        let prefixes = [], prefix = ''
+        let arr = []
+        let obj = {}
+        for (const file of self.files) {
+            arr = file.fileOnServer.filter(item => item.enableDownload).map(item => item.name)
+            if (arr.length) {
+                prefix = arr[0].split('-')[0]
+                prefixes.push(prefix)
+                obj[prefix] = arr
+            }
+        }
+        if (Object.keys(obj).length) {
+            fetch(`${window.location.href}/download-all`, {
+                method: 'POST',
+                body: JSON.stringify({prefixes: obj}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function(resp) {
+                return resp.blob();
+              }).then(function(blob) {
+                // loaded from cdnjs
+                return download(blob, `${Object.keys(obj).join('-')}.zip`);
+              })
+        }
+        
+    }
 
     this.changeSettingOption = function(lineName, index) {
         let thisFile = self.files[index];
@@ -415,6 +452,20 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
         }
     };
 
+    this.onToggleFileDownload = function(fileObj) {
+        if (fileObj.fileOnServer && fileObj.fileOnServer.length) {
+            for (const item of fileObj.fileOnServer) {
+                item.enableDownload = fileObj.enableDownload
+            }
+        }
+    }
+
+    this.onToggleLinkDownload = function(fileObj) {
+        if (fileObj.fileOnServer && fileObj.fileOnServer.length) {
+            fileObj.enableDownload = fileObj.fileOnServer.every(item => item.enableDownload)
+        }
+    }
+
     $scope.$watch('files', function() {
         let defaultLine = {
             header: 1,
@@ -445,7 +496,8 @@ function Controller($scope, $timeout, $element, $window, $http, Upload) {
                     datasetCol: '',
                     datasetColIndex: 2,
                     chooseHeaders: true,
-                    chooseColumn: 'well'
+                    chooseColumn: 'well',
+                    enableDownload: true
                 };
 
                 var readFile = new FileReader();

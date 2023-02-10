@@ -1,7 +1,15 @@
 const fs = require('fs');
 const rl = require('readline');
+const admz = require('adm-zip')
 
 function csvTransform(req, res) {
+  function checkOrCreateDir(dirPath) {
+    let result = fs.existsSync(dirPath);
+    if (!result) {
+      fs.mkdirSync(dirPath)
+    }
+  }
+
   return new Promise(function(resolve, reject) {
     try {
       // console.log(req.body);
@@ -68,8 +76,10 @@ function csvTransform(req, res) {
             '0-' +
             currentWell +
             '.csv';
-          fileName = fileName.replace('/', '-');
-          outputUrl = 'uploads/' + fileName;
+          let dir = inputName.slice(0, inputName.indexOf('-')) + '0'
+          checkOrCreateDir('uploads/' + dir)
+          fileName = fileName.replace('/', '-')
+          outputUrl = 'uploads/' + dir + '/' + fileName
           // console.log(outputUrl);
           fs.writeFileSync(outputUrl, header + line + '\n');
           outputFiles.push(fileName);
@@ -95,8 +105,10 @@ function csvTransform(req, res) {
                 '0-' +
                 currentWell +
                 '.csv';
+              let dir = inputName.slice(0, inputName.indexOf('-')) + '0'
+              checkOrCreateDir('uploads/' + dir)
               fileName = fileName.replace('/', '-');
-              outputUrl = 'uploads/' + fileName;
+              outputUrl = 'uploads/' + dir + '/' + fileName
               fs.writeFileSync(outputUrl, header + line + '\n');
               outputFiles.push(fileName);
             }
@@ -125,12 +137,46 @@ function csvTransform(req, res) {
 function downloadConvertedCSV(req, res) {
   return new Promise(function(resolve, reject) {
     let fileName = req.query.fileName;
-    if (fs.existsSync('uploads/' + fileName)) {
-      resolve('uploads/' + fileName);
+    let dir = 'uploads/' + fileName.slice(0, fileName.indexOf('-'))
+    if (!fs.existsSync(dir)) {
+      reject('===>SomethingWentWrong');
+    } else {
+      resolve(dir + '/' + fileName);
+    }
+  });
+}
+
+function downloadMultiConvertedCsv(req, res) {
+  return new Promise(function(resolve, reject) {
+    let prefixes = req.body.prefixes;
+    if (prefixes && Object.keys(prefixes).length) {
+      const downloadFile = `${Object.keys(prefixes).join('-')}.zip`;
+      try {
+          let zp = new admz();
+          for (const prefix in prefixes) {
+            console.log(prefix)
+            let files = prefixes[prefix]
+            zp.addLocalFolder('uploads/' + prefix, prefix, (filename) => files.indexOf(filename) >= 0)
+          }
+          zp.writeZip(`uploads/${downloadFile}`, (err) => console.log(err));
+          res.set('Content-Type','application/octet-stream');
+          res.set('Content-Disposition',`attachment; filename=${downloadFile}`);
+          const data = zp.toBuffer();      
+          res.set('Content-Length', data.length);
+          res.download(`uploads/${downloadFile}`, (err) => {
+            if (fs.existsSync(`uploads/${downloadFile}`)) {
+              fs.unlinkSync(`uploads/${downloadFile}`)
+            }
+          });
+        resolve('done')
+      } catch (error) {
+        console.log(error)
+        reject('===>SomethingWentWrong');
+      }
     } else {
       reject('===>SomethingWentWrong');
     }
-  });
+  })
 }
 
 // function onExit(req, res) {
@@ -152,5 +198,6 @@ function downloadConvertedCSV(req, res) {
 module.exports = {
   csvTransform: csvTransform,
   downloadConvertedCSV: downloadConvertedCSV,
+  downloadMultiConvertedCsv: downloadMultiConvertedCsv
   // onExit: onExit,
 };
